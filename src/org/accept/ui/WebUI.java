@@ -23,6 +23,7 @@ public class WebUI {
     @WebPage
     public String files(Request request) throws Exception {
         String dir = request.getParameters().get("dir");
+        //TODO: should decoding be a part of TinyWeb?
         dir = java.net.URLDecoder.decode(dir, "UTF-8");
 
         return accept.getFiles(dir);
