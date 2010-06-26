@@ -1,6 +1,5 @@
 package org.accept.ui;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 import com.sabre.tinyweb.internal.nano.NanoWebEngine;
@@ -20,18 +19,10 @@ public class WebUI {
 
     GiveWenZenAccept accept = new GiveWenZenAccept();
     final static Logger log = Logger.getLogger(WebUI.class.toString());
-    private String workDir;
-    private String storiesDir;
-
-    public WebUI(String workDir, String storiesDir) {
-        this.workDir = workDir;
-        this.storiesDir = storiesDir;
-    }
 
     @WebPage
     public String files(Request request) throws Exception {
         String dir = request.getParameters().get("dir");
-        dir = workDir + "/" + storiesDir + "/" + dir;
         //TODO: should decoding be a part of TinyWeb?
         dir = java.net.URLDecoder.decode(dir, "UTF-8");
 
@@ -74,15 +65,17 @@ public class WebUI {
         return "Settings SAVED.";
     }
 
+    //For development you must change the working dir to Accept/html !!!
     public static void main(String[] args) {
         CommandLineConfig config = new CommandLineConfig(args);
+
         int port = config.getPort(80);
+        // workDir/storiesDir not yet used...
+        String workDir = config.getWorkDir(".");
+        String storiesDir = config.getStoriesDir(".");
 
-        String workDir = "./Accept/html";
-        String storiesDir = "../calculator";
-
-        WebApplication app = new WebApplication(new NanoWebEngine(workDir));
-        app.addWebPage(new WebUI(workDir, storiesDir));
+        WebApplication app = new WebApplication(new NanoWebEngine("."));
+        app.addWebPage(new WebUI());
         app.start(port);
     }
 }

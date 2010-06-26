@@ -33,8 +33,11 @@ public class CommandLineConfig {
         return Integer.parseInt(props.getProperty("port", "" + defaultPort));
     }
 
-    //TODO
-    public String getWorkdir(String s) {
-        return s;
+    public String getWorkDir(String defaultWorkDir) {
+        return props.getProperty("workDir", defaultWorkDir);
+    }
+
+    public String getStoriesDir(String defaultStoriesDir) {
+        return props.getProperty("storiesDir", defaultStoriesDir);
     }
 }
