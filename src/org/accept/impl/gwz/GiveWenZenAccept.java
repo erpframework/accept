@@ -15,13 +15,12 @@ public class GiveWenZenAccept implements Accept {
 	final static Logger log = Logger.getLogger(GiveWenZenAccept.class.toString());
     ProcessRunner runner = new ProcessRunner();
 
-	public String validate(String content, String settings, String guid) {
+	public String validate(String content, AcceptSettings settings, String guid) {
         //TODO: those files are not deleted until the end of the program run
 		File input = new FileIO().writeToTempFile(content);
 		File output = new FileIO().createTempFile();
 
-        org.accept.impl.settings.AcceptSettings s = new AcceptSettings(settings);
-		String command = s.buildCommand() + " org.accept.impl.gwz.GivWenZenMain " + input + " " + output;
+		String command = settings.buildCommand() + " org.accept.impl.gwz.GivWenZenMain " + input + " " + output;
 
 		log.info("About to run this command: \n" + command);
 

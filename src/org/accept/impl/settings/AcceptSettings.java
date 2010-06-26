@@ -3,6 +3,7 @@ package org.accept.impl.settings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.html.HTMLMetaElement;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +20,18 @@ import java.util.StringTokenizer;
 public class AcceptSettings {
     
     private JSONObject settings;
+    private Settings raw = new Settings();
 
-    public AcceptSettings(String settings) {
-        StringTokenizer t = new StringTokenizer(settings, "\n");
+    AcceptSettings(String content) {
+        init(content);
+    }
+
+    public AcceptSettings() {
+        init(raw.getContent());
+    }
+
+    private void init(String content) {
+        StringTokenizer t = new StringTokenizer(content, "\n");
         this.settings = new JSONObject();
         while(t.hasMoreTokens()) {
             String token = t.nextToken().trim();
@@ -54,5 +64,9 @@ public class AcceptSettings {
 
     public String getJavaCommand() {
         return settings.getString("java");
+    }
+
+    public Settings getRaw() {
+        return raw;
     }
 }

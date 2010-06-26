@@ -32,4 +32,9 @@ public class CommandLineConfig {
     public int getPort(int defaultPort) {
         return Integer.parseInt(props.getProperty("port", "" + defaultPort));
     }
+
+    //TODO
+    public String getWorkdir(String s) {
+        return s;
+    }
 }

@@ -1,28 +1,37 @@
 package org.accept.ui;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import com.sabre.tinyweb.internal.nano.NanoWebEngine;
 import org.accept.domain.ValidationResult;
-import org.accept.impl.Settings;
 import org.accept.impl.gwz.GiveWenZenAccept;
 
 import com.sabre.tinyweb.Request;
 import com.sabre.tinyweb.WebApplication;
 import com.sabre.tinyweb.WebPage;
+import org.accept.impl.settings.AcceptSettings;
 import org.accept.util.commandline.CommandLineConfig;
 import org.accept.util.exception.StackTracePrinter;
 
 public class WebUI {
 
-    Settings settings = new Settings();
+    AcceptSettings settings = new AcceptSettings();    
 
     GiveWenZenAccept accept = new GiveWenZenAccept();
     final static Logger log = Logger.getLogger(WebUI.class.toString());
+    private String workDir;
+    private String storiesDir;
+
+    public WebUI(String workDir, String storiesDir) {
+        this.workDir = workDir;
+        this.storiesDir = storiesDir;
+    }
 
     @WebPage
     public String files(Request request) throws Exception {
         String dir = request.getParameters().get("dir");
+        dir = workDir + "/" + storiesDir + "/" + dir;
         //TODO: should decoding be a part of TinyWeb?
         dir = java.net.URLDecoder.decode(dir, "UTF-8");
 
@@ -31,7 +40,7 @@ public class WebUI {
 
     @WebPage
     public String settings(Request request) throws Exception {
-        return settings.getContent();
+        return settings.getRaw().getContent();
     }
 
     @WebPage
@@ -42,7 +51,7 @@ public class WebUI {
 
             log.info("Using settings:\n" + settings + "\n");
             log.info("Received request to validate following:\n" + content + "\n");
-            return accept.validate(content, settings.getContent(), guid);
+            return accept.validate(content, settings, guid);
         } catch (Throwable e) {
             ValidationResult result = new ValidationResult();
             result.appendOutput(new StackTracePrinter().print(e));
@@ -61,7 +70,7 @@ public class WebUI {
     @WebPage
     public String saveSettings(Request request) throws Exception {
         String s = request.getParameters().get("settings");
-        new org.accept.impl.settings.Settings().save(s);
+        settings.getRaw().save(s);
         return "Settings SAVED.";
     }
 
@@ -69,8 +78,11 @@ public class WebUI {
         CommandLineConfig config = new CommandLineConfig(args);
         int port = config.getPort(80);
 
-        WebApplication app = new WebApplication(new NanoWebEngine());
-        app.addWebPage(new WebUI());
+        String workDir = "./Accept/html";
+        String storiesDir = "../calculator";
+
+        WebApplication app = new WebApplication(new NanoWebEngine(workDir));
+        app.addWebPage(new WebUI(workDir, storiesDir));
         app.start(port);
     }
 }
