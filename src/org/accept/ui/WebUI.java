@@ -37,7 +37,6 @@ public class WebUI {
     @WebPage
     public String validate(Request request) throws Exception {
         try {
-            saveSettings(request);
             String content = request.getParameters().get("content");
             String guid = request.getParameters().get("guid");
 
