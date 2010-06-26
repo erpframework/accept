@@ -20,14 +20,9 @@ import java.util.StringTokenizer;
 public class AcceptSettings {
     
     private JSONObject settings;
-    private Settings raw = new Settings();
 
-    AcceptSettings(String content) {
+    public AcceptSettings(String content) {
         init(content);
-    }
-
-    public AcceptSettings() {
-        init(raw.getContent());
     }
 
     private void init(String content) {
@@ -64,9 +59,5 @@ public class AcceptSettings {
 
     public String getJavaCommand() {
         return settings.getString("java");
-    }
-
-    public Settings getRaw() {
-        return raw;
     }
 }

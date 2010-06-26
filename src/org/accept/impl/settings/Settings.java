@@ -19,10 +19,12 @@ public class Settings {
 
     private void makeSureStorageExists() {
         if (!storage.exists()) {
-            save("java=java -Xmx512m\n" +
-                    "path=./Accept/bin\n" +
-                    "path=./Accept/lib/compile/givwenzen-1.0.1-SNAPSHOT.jar\n" +
-                    "path=./Accept/lib/test/junit-4.8.2.jar");
+            save("#I generated those settings for you because I didn't find any accept.properties file.\n" +
+                    "#Please change whatever you like\n" +
+                    "java=java -Xmx512m\n" +
+                    "path=../bin\n" +
+                    "path=../lib/compile/givwenzen-1.0.1-SNAPSHOT.jar\n" +
+                    "path=../lib/test/junit-4.8.2.jar");
         }
     }
 

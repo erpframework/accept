@@ -6,22 +6,23 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import org.accept.api.Accept;
 import org.accept.impl.settings.AcceptSettings;
+import org.accept.impl.settings.Settings;
 import org.accept.util.files.FileIO;
 import org.accept.util.files.FolderActions;
 
-public class GiveWenZenAccept implements Accept {
+public class GiveWenZenAccept {
 	
 	final static Logger log = Logger.getLogger(GiveWenZenAccept.class.toString());
     ProcessRunner runner = new ProcessRunner();
 
-	public String validate(String content, AcceptSettings settings, String guid) {
+	public String validate(String content, Settings settings, String guid) {
         //TODO: those files are not deleted until the end of the program run
 		File input = new FileIO().writeToTempFile(content);
 		File output = new FileIO().createTempFile();
 
-		String command = settings.buildCommand() + " org.accept.impl.gwz.GivWenZenMain " + input + " " + output;
+        AcceptSettings acceptSettings = new AcceptSettings(settings.getContent());
+        String command = acceptSettings.buildCommand() + " org.accept.impl.gwz.GivWenZenMain " + input + " " + output;
 
 		log.info("About to run this command: \n" + command);
 
@@ -71,14 +72,6 @@ public class GiveWenZenAccept implements Accept {
         }
         String s = out.toString();
         return s;
-    }
-
-    public void validate(String folder) {
-        FolderActions.eachFile(folder, ".*story").act(new FolderActions.FileContentHandler() {
-            public void handle(File file, String content) {
-                new GWZRunner().runContent(content, file);
-            }
-        });
     }
 
     public void createExampleStory(File dir) {

@@ -11,12 +11,13 @@ import com.sabre.tinyweb.Request;
 import com.sabre.tinyweb.WebApplication;
 import com.sabre.tinyweb.WebPage;
 import org.accept.impl.settings.AcceptSettings;
+import org.accept.impl.settings.Settings;
 import org.accept.util.commandline.CommandLineConfig;
 import org.accept.util.exception.StackTracePrinter;
 
 public class WebUI {
 
-    AcceptSettings settings = new AcceptSettings();    
+    Settings settings = new Settings();
 
     GiveWenZenAccept accept = new GiveWenZenAccept();
     final static Logger log = Logger.getLogger(WebUI.class.toString());
@@ -38,7 +39,7 @@ public class WebUI {
 
     @WebPage
     public String settings(Request request) throws Exception {
-        return settings.getRaw().getContent();
+        return settings.getContent();
     }
 
     @WebPage
@@ -47,7 +48,7 @@ public class WebUI {
             String content = request.getParameters().get("content");
             String guid = request.getParameters().get("guid");
 
-            log.info("Using settings:\n" + settings + "\n");
+            log.info("Using settings:\n" + settings.getContent() + "\n");
             log.info("Received request to validate following:\n" + content + "\n");
             return accept.validate(content, settings, guid);
         } catch (Throwable e) {
@@ -68,7 +69,7 @@ public class WebUI {
     @WebPage
     public String saveSettings(Request request) throws Exception {
         String s = request.getParameters().get("settings");
-        settings.getRaw().save(s);
+        settings.save(s);
         return "Settings SAVED.";
     }
 
