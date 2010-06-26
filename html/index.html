@@ -1,0 +1,169 @@
+<html>
+  <head>
+	<script type="text/javascript" src="res/jquery-1.4.2.min.js" ></script>
+	<script type="text/javascript" src="res/jquery.periodicalupdater.js" ></script>
+	<script type="text/javascript" src="res/jquery.Guid.js" ></script>
+	<script type="text/javascript" src="res/jqueryFileTree.js" ></script>
+	<script type="text/javascript" src="res/jquery.ajaxmanager.js" ></script>
+
+    <link href="res/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<script type="text/javascript">
+
+        var validationStarted = false;
+
+		function validate(idx, file_name) {
+            if (validationStarted) {
+                return;
+            }
+            validationStarted = true;
+
+            validation_started(idx);
+            $('#full_log'+idx).html('Started.')
+            $('#message'+idx).html('Started. See the full log for output.')
+
+            if (!file_name) { file_name = '' }
+
+		    var content = $('#content' + idx).attr('value');
+		    var settings = $('#settings').attr('value');
+
+            var guid = $.Guid.New();
+
+            var updater_handle = $.PeriodicalUpdater('getProgress', {
+                method: 'get',
+                data: { guid: guid },
+                minTimeout: 2000,       // starting value for the timeout in milliseconds
+                maxTimeout: 8000,       // maximum length of time between requests
+                multiplier: 2,          // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
+                type: 'text',           // response type - text, xml, json, etc.  See $.ajax config options
+                maxCalls: 0,            // maximum number of calls. 0 = no limit.
+                autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
+            }, function(data) {
+                $('#full_log'+idx).html(data);   
+            });
+
+			$.ajax({ url:'validate', type: 'POST', data: {'content' : content, 'settings' : settings, 'guid' : guid, 'fileName' : file_name},
+				success:function(data) {
+                    updater_handle.stop();
+				    eval("var result = " + data);
+				    $('#message'+idx).html(result.message)
+					$('#full_log'+idx).html(result.output);
+					$('#progress'+idx).removeClass().addClass('p_' + result.status);
+					if (result.status != 'green') {
+						var pointer_txt = '\n';
+						for (var i = 0 ; i < result.stepIndex ; i++) {
+							pointer_txt += '\n';
+						}	
+						pointer_txt += '>>>';				
+						$('#pointer'+idx).html(pointer_txt);
+					}
+                    validationStarted = false;
+				}} );
+		}
+
+        function save_settings() {
+            var settings = $('#settings').attr('value');
+			$.ajax( {url:'saveSettings', type: 'POST', data: { 'settings' : settings },
+                success:function(data) {
+                     $('#settings_div').slideToggle();
+                }
+            });
+		}
+		
+		function show_info(idx) {
+			$('#full_log_tab' + idx).hide();
+            $('#info_tab' + idx).hide();
+            $('#info_tab' + idx).fadeIn();
+		}
+
+        function validation_started(idx) {
+            if ($('#info_tab' + idx).is(':visible')) {
+                show_info(idx);
+            } else {
+                show_full_log(idx);
+            }
+            $('#pointer'+idx).html('');
+            $('#progress'+idx).removeClass().addClass('p_not_run');
+        }
+		
+		function show_full_log(idx) {
+			$('#info_tab' + idx).hide();
+            $('#full_log_tab' + idx).hide();
+            $('#full_log_tab' + idx).fadeIn();
+		}
+
+        function open_settings() {
+            $.ajax( { url: 'settings', success: function(data) {
+                $('#settings').attr('value', data);
+                $('#settings_div').slideToggle();
+            }});
+        }
+		
+		function init() {
+		    $('#settings_div').hide();
+            $('#wait').hide();
+
+            $('#wait').ajaxStart(function() { $('#wait').fadeIn() } );
+            $('#wait').ajaxComplete(function(e, x, opts) {
+                if (opts.url.substr(0, 11) != 'getProgress') $('#wait').fadeOut()
+            } );
+
+            $('#files_div').fileTree({
+                root: './',
+                script: 'files',
+                multiFolder: true
+            }, function(file) {
+                $.ajax( { url: file, success:function(data) {
+                        $('#full_log_x').html('Full log: not validated yet.')
+                        $('#message_x').html('Info: not validated yet.')
+                        $('#content_x').attr('value', data);
+                        validation_started('_x');
+                    }
+                });
+            });
+		}
+	</script>  
+	
+	<style>
+	  .p_not_run { background-color:#FFFFCC; }
+	  .p_green { background-color:#99FF99; }
+	  .p_red { background-color:#FF6633; }
+	</style>
+
+	<meta http-equiv="Expires" content="0" />
+	<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />	  
+  </head>
+
+  <body onload="javascript:init()">
+    <p><a href="#" onclick="javascript:open_settings()">Show/Hide settings</a></p>
+    <div id="settings_div">
+        <textarea id="settings" cols="120" rows="4"></textarea>
+        <p><a href="#" onclick="javascript:save_settings()">Save settings</a></p>
+    </div>
+    <hr/>
+  
+    <table><tr><td align="left"><h2>Stories</h2></td><td align="right"><img id="wait" src="res/wait.gif" /></td></tr></table>
+    <div id="files_div"></div>
+    <div id="current_story">
+        <div><h3><a href="#" onclick="javascript:validate('_x')">Validate now!</a></h3></div>
+        <textarea style="   color:#CC0033" id="pointer_x" cols="1" rows="10" readonly="readonly"></textarea>
+        <textarea id="content_x" cols="60" rows="10">Above you see the list of stories - clicking on story will put here the acceptance of selected story.
+
+You can also type here the acceptance criteria by hand. This allows you *learn* how the system works.</textarea>
+        <div id="progress_x" class="p_not_run">
+        			<h3>
+        				<a href="#" onclick="javascript:show_info('_x')">Info</a>
+        				/ <a href="#" onclick="javascript:show_full_log('_x')">Full log</a>
+        			</h3>
+        		</div>
+	            <div id="info_tab_x" >
+	                <pre id="message_x" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
+	            </div>
+	            <div id="full_log_tab_x" style="display:none;" >
+	                <pre id="full_log_x" cols="80" rows="10" readonly="true">Full log: not validated yet</pre>
+	            </div>
+    </div>
+
+  </body>
+</html>

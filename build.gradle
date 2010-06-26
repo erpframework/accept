@@ -1,0 +1,38 @@
+apply 'plugin' : 'java'
+
+version = '0.9-SNAPSHOT'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            srcDir 'gwztests'
+            srcDir 'html'
+        }
+    }
+	test {
+		java {
+			srcDir 'test'
+		}
+	}
+}
+
+dependencies {
+	compile fileTree(dir: 'lib', include: ['compile/*.jar', 'provided/*.jar'])
+}
+
+jar {
+  from fileTree(dir: 'lib/compile', include: '*.jar').collect {
+    it.isDirectory() ? it : zipTree(it).matching {
+      exclude 'META-INF/MANIFEST.MF'
+    }
+  }
+
+  from('html')
+}
+
+manifest.mainAttributes(
+  'Main-Class': 'org.accept.ui.WebUI'
+)
+
+defaultTasks "clean", "build", "test", "jar"

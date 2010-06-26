@@ -1,0 +1,4 @@
+glob:.gradle
+glob:bin
+glob:build
+glob:.settings
