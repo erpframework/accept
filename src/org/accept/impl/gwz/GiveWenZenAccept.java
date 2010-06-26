@@ -2,6 +2,7 @@ package org.accept.impl.gwz;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -59,7 +60,7 @@ public class GiveWenZenAccept implements Accept {
             }
             // All files
             for (String file : files) {
-                if (!new File(dir, file).isDirectory()) {
+                if (!new File(dir, file).isDirectory() && file.endsWith(".story")) {
                     int dotIndex = file.lastIndexOf('.');
                     String ext = dotIndex > 0 ? file.substring(dotIndex + 1) : "";
                     out.append("<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\"" + dir + file + "\">"
@@ -78,5 +79,24 @@ public class GiveWenZenAccept implements Accept {
                 new GWZRunner().runContent(content, file);
             }
         });
+    }
+
+    public void createExampleStory(File dir) {
+        File file = new File(dir, "example.story");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to create file: " + file, e);
+        }
+        new FileIO().write(file, "#I generated this example for you\n" +
+                "#because there were no stories in " + dir.getPath() + " folder\n" +
+                "Given\n" +
+                "  calculator is turned on\n" +
+                "  I enter 7\n" +
+                "  I enter 10\n" +
+                "When\n" +
+                "  I add the numbers\n" +
+                "Then\n" +
+                "  The calculator shows 17");
     }
 }

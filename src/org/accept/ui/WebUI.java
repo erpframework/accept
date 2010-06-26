@@ -1,5 +1,6 @@
 package org.accept.ui;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import com.sabre.tinyweb.internal.nano.NanoWebEngine;
@@ -26,7 +27,13 @@ public class WebUI {
         //TODO: should decoding be a part of TinyWeb?
         dir = java.net.URLDecoder.decode(dir, "UTF-8");
 
-        return accept.getFiles(dir);
+        String out = accept.getFiles(dir);
+        //TODO, veeeeeeeeeeery hacky!!!!
+        if (!out.contains("<li")) {
+            accept.createExampleStory(new File(dir));
+            out = accept.getFiles(dir);
+        }
+        return out;
     }
 
     @WebPage
