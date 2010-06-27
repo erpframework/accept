@@ -5,8 +5,10 @@
 	<script type="text/javascript" src="res/jquery.Guid.js" ></script>
 	<script type="text/javascript" src="res/jqueryFileTree.js" ></script>
 	<script type="text/javascript" src="res/jquery.ajaxmanager.js" ></script>
+	<script type="text/javascript" src="res/jquery.jquery.tooltip.min.js" ></script>
 
     <link href="res/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="res/jquery.tooltip.css" rel="stylesheet" type="text/css" media="screen" />
 
 	<script type="text/javascript">
 
@@ -120,6 +122,8 @@
                     }
                 });
             });
+
+            $('.help').tooltip( { delay:0 } );
 		}
 	</script>  
 	
@@ -132,6 +136,8 @@
 	  .p_not_run { background-color:#FFFFCC; }
 	  .p_green { background-color:#99FF99; }
 	  .p_red { background-color:#FF6633; }
+
+      .help { cursor: help; } 
 
       #wait {
           position: fixed;
@@ -159,14 +165,14 @@
     <p><a href="#" onclick="javascript:open_settings()">Show/Hide settings</a></p>
     <div id="settings_div">
         <textarea id="settings" cols="120" rows="6"></textarea>
-        <p><a href="#" onclick="javascript:save_settings()">Save settings</a></p>
+        <p><a href="#" onclick="javascript:save_settings()">Save settings</a> <img class="help" title="Saves settings on the server. They will be stored in accept.properties file." src="res/images/help.png" /></p>
     </div>
     <hr/>
   
-    <p><span style="font-size:xx-large;">Stories&nbsp;</span>(lists folders and <i>*.story</i> files)<p>
+    <p><span style="font-size:xx-large;">Stories&nbsp;</span><img class="help" title="Lists folders and *.story files found in the application root folder" src="res/images/help.png" /><p>
     <div id="files_div"></div>
     <div id="current_story">
-        <div><h3><a href="#" onclick="javascript:validate('_x')">Validate now!</a></h3></div>
+        <div><h3><a href="#" onclick="javascript:validate('_x')">Validate now!</a> <img class="help" title="Starts validation process. Will fork a java process on the server and execut the acceptance. Will use the latest settings." src="res/images/help.png" /></h3></div>
         <textarea style="   color:#CC0033" id="pointer_x" cols="1" rows="10" readonly="readonly"></textarea>
         <textarea id="content_x" cols="60" rows="10">Above you see the list of stories - clicking on story will put here the acceptance of selected story.
 
@@ -175,6 +181,7 @@ You can also type here the acceptance criteria by hand. This allows you *learn* 
         			<h3>
         				<a href="#" onclick="javascript:show_info('_x')">Info</a>
         				/ <a href="#" onclick="javascript:show_full_log('_x')">Full log</a>
+                        <img class="help" title="Info shows only important messages. Full log shows the entire output incrementally, refreshing every few seconds." src="res/images/help.png" />
         			</h3>
         		</div>
 	            <div id="info_tab_x" >
