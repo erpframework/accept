@@ -25,9 +25,11 @@ public class GWZRunner {
             stepIndex++;
             try {
                 executor.given(step);
-            } catch (Exception e) {
+            } catch (GivWenZenExecutionException e) {
                 Throwable actual = theBottom(e, 2);
-                throw new GWZException(stepIndex, step, e, actual, contentFile);
+                throw new GWZException(stepIndex, step, actual, contentFile);
+            } catch (Exception e) {
+                throw new GWZException(stepIndex, step, e, contentFile);
             }
         }
     }
@@ -36,9 +38,7 @@ public class GWZRunner {
         try {
             this.runContent(content, contentFile);
         } catch (GWZException e) {
-            //TODO: this printer swallows pieces of stack trace
-            String trace = new StackTracePrinter().print(e.actual);
-            return new ValidationResult(e.stepIndex, e.step, e.actual.getMessage(), trace, e.cause);
+            return new ValidationResult(e.stepIndex, e.step, e.cause.getMessage(), e.cause);
         }
 		return new ValidationResult();
 	}
@@ -55,41 +55,41 @@ public class GWZRunner {
     private class GWZException extends RuntimeException {
         int stepIndex;
         String step;
-        Exception cause;
-        Throwable actual;
+        Throwable cause;
         File contentFile;
 
-        public GWZException(int stepIndex, String step, Exception cause, Throwable actual, File contentFile) {
-            super("Failed to run step: " + step, cause);
+        public GWZException(int stepIndex, String step, Throwable cause, File contentFile) {
+            super("Failed to validate story: " + contentFile, cause);
             this.stepIndex = stepIndex;
             this.step = step;
             this.cause = cause;
-            this.actual = actual;
             this.contentFile = contentFile;
-            if (cause != actual) {
-                setStackTrace(actual.getStackTrace());
-            }
+            setStackTrace(cause.getStackTrace());
         }
 
         @Override
         public String toString() {
-            String rootCause = (actual != cause)? actual.getMessage() : cause.getMessage();
-            return "\nFailed to execute step!\n" +
-                   "Step:  " + step + "\n" +
-                   "File:  " + contentFile + "\n" +
-                   "Line:  " + stepIndex + "\n" +
-                   "Cause: " + rootCause + "\n";
+            return "\nFailed to validate story!\n" +
+                   "Story:   " + contentFile + "\n" +
+                   "Step:    " + step + "\n" +
+                   "Line no: " + stepIndex + "\n" +
+                   "Cause:   " + cause.getMessage() + "\n";
         }
     }
 
     public class MyDomainStepFinder implements IDomainStepFinder {
         public Set<MarkedClass> findStepDefinitions() {
             final HashSet<MarkedClass> s = new HashSet<MarkedClass>();
-            new SimpleClasspathExplorer().findClasses("bdd/steps", new SimpleClasspathExplorer.ClassHandler() {
-                public void handle(Class cls) {
-                    s.add(new MarkedClass(cls));
-                }
-            });
+            try {
+                new SimpleClasspathExplorer().findClasses("bdd/steps", new SimpleClasspathExplorer.ClassHandler() {
+                    public void handle(Class cls) {
+                        s.add(new MarkedClass(cls));
+                    }
+                });
+            }
+            catch (SimpleClasspathExplorer.UnableToFindPackageException e) {
+                //Ignore, let's make GWZ handle this problem        
+            }
             return s;
         }
     }

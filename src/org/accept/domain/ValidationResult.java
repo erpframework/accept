@@ -11,18 +11,16 @@ public class ValidationResult {
 	private int stepIndex;
 	private String step;
 	private String message;
-	private String stackTrace;
 	private Throwable exception;
 
 	public ValidationResult() {
 		status = Status.green;
 	}
 
-	public ValidationResult(int stepIndex, String step, String message, String stackTrace, Throwable e) {
+	public ValidationResult(int stepIndex, String step, String message, Throwable e) {
 		this.stepIndex = stepIndex;
 		this.step = step;
 		this.message = message;
-		this.stackTrace = stackTrace;
 		this.exception = e;
 		status = Status.red;
 	}
@@ -79,14 +77,6 @@ public class ValidationResult {
 
 	public void setMessage(String message) {
 		this.message = message;
-	}
-
-	public String getStackTrace() {
-		return stackTrace;
-	}
-
-	public void setStackTrace(String stackTrace) {
-		this.stackTrace = stackTrace;
 	}
 
 	public Throwable getException() {
