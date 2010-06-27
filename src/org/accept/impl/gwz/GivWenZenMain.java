@@ -3,10 +3,13 @@ package org.accept.impl.gwz;
 import java.io.File;
 
 import org.accept.domain.ValidationResult;
+import org.accept.util.files.FileIO;
 
 public class GivWenZenMain {
 	
 	public static void main(String[] args) throws Throwable {
+        //The communication with the process is based on temp files...
+        //Quite lame but generally should work... :>
 		String contentFile = args[0];
 		String outputFile = args[1];
 		
@@ -15,7 +18,7 @@ public class GivWenZenMain {
 		GWZRunner runner = new GWZRunner();
 		ValidationResult result = runner.run(content, new File(contentFile));
 		
-		new org.accept.util.files.FileIO().write(new File(outputFile), result.toJSON());
+		new FileIO().write(new File(outputFile), result.toJSON());
 		if (result.getException() != null) {
 			throw result.getException();
 		}
