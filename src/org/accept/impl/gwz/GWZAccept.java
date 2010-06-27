@@ -81,7 +81,8 @@ public class GWZAccept {
             throw new RuntimeException("Unable to create file: " + file, e);
         }
         new FileIO().write(file, "#I generated this example for you\n" +
-                "#because there were no stories in " + dir.getAbsolutePath()  + " folder\n" +
+                "#because there were no stories in " + dir.getAbsolutePath()  + " folder.\n" +
+                "#Go ahead and validate it. If it fails read *carefully* the exception message.\n" +
                 "Given\n" +
                 "  calculator is turned on\n" +
                 "  I enter 7\n" +
