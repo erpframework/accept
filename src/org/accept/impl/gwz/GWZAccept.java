@@ -21,7 +21,7 @@ public class GWZAccept {
 		File output = new FileIO().createTempFile();
 
         AcceptSettings acceptSettings = new AcceptSettings(settings.getContent());
-        String command = acceptSettings.buildCommand() + " org.accept.impl.gwz.GWZMain " + input + " " + output;
+        String command = acceptSettings.buildCommand() + " org.accept.impl.gwz.GWZMain \"" + input + "\" \"" + output + "\"";
 
 		log.info("About to run this command: \n" + command);
 

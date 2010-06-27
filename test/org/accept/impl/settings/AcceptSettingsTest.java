@@ -30,9 +30,7 @@ public class AcceptSettingsTest {
         String cp = settings.getJavaClassPath();
 
         //then
-        assertThat(cp)
-            .startsWith("-cp ")
-            .endsWith("./bin;lib/test/givwenzen-with-dependencies-1.0.jar;lib/test/junit-4.8.2.jar");
+        assertThat(cp).endsWith("./bin;lib/test/givwenzen-with-dependencies-1.0.jar;lib/test/junit-4.8.2.jar");
     }
 
     @Test
@@ -53,8 +51,8 @@ public class AcceptSettingsTest {
     @Test
     public void shouldBuildClasspathCorrectly() throws Exception {
         String javaCp = System.getProperty("java.class.path");
-        assertThat(new AcceptSettings("path=foo", ":").getJavaClassPath()).isEqualTo("-cp " + javaCp + ":foo");
-        assertThat(new AcceptSettings("path=foo\npath=bar", ":").getJavaClassPath()).isEqualTo("-cp " + javaCp + ":foo:bar");
-        assertThat(new AcceptSettings("").getJavaClassPath()).isEqualTo("-cp " + javaCp);
+        assertThat(new AcceptSettings("path=foo", ":").getJavaClassPath()).isEqualTo(javaCp + ":foo");
+        assertThat(new AcceptSettings("path=foo\npath=bar", ":").getJavaClassPath()).isEqualTo(javaCp + ":foo:bar");
+        assertThat(new AcceptSettings("").getJavaClassPath()).isEqualTo(javaCp);
     }
 }

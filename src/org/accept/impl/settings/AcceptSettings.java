@@ -45,13 +45,13 @@ public class AcceptSettings {
     }
 
     public String buildCommand() {
-        return getJavaCommand() + " " + getJavaClassPath();
+        return getJavaCommand() + " -cp \"" + getJavaClassPath() + "\"";
     }
 
     public String getJavaClassPath() {
         StringBuilder cp = new StringBuilder();
         String thisCp = System.getProperty("java.class.path");
-        cp.append("-cp ").append(thisCp);
+        cp.append(thisCp);
 
         JSONArray arr = settings.getJSONArraySmartly("path");
         for(int i = 0 ; i < arr.length() ; i++) {
