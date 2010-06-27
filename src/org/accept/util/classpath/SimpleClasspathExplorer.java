@@ -11,20 +11,21 @@ import static org.accept.util.files.FolderActions.*;
 
 /**
  * Very simple classpath explorer. Limitations:
- *  - not recursive! (can be implemented fairly easily but I'm lazy...)
  *  - does not find classes inside jars (but this should be ok, for most cases :)
  *  - does not find inner classes even if they are public static (this should be fine)
  */
 public class SimpleClasspathExplorer {
 
     public void findClasses(final String pkg, final ClassHandler handler) {
-        String root = findRoot(pkg);
+        final String root = findRoot(pkg);
 
         FolderActions.eachFile(root, ".*\\.class").act(new FileHandler() {
             public void handle(File file) {
-                String clsName = pkg.replaceAll("[/\\\\]", ".") + "." + file.getName().replaceFirst("\\.class$", "");
+                String clsName = new ClassNameBuilder().build(root, pkg, file);
                 Class cls = loadClass(clsName);
-                handler.handle(cls);
+                if (cls != null) {
+                    handler.handle(cls);
+                }
             }
         });
     }
@@ -36,26 +37,22 @@ public class SimpleClasspathExplorer {
         } catch (IOException e) {
             throw new UnableToFindPackageException("Due to IO exception, I cannot find this package: " + pkg);
         }
-        String root = null;
         while (res.hasMoreElements()) {
             URL url =  res.nextElement();
             File candidate = new File(url.getPath());
             if (candidate.exists() && candidate.isDirectory()) {
-                root = candidate.getPath();
-                break;
+                return candidate.getPath();
             }
         }
-        if (root == null) {
-            throw new UnableToFindPackageException("Unable to find this package: " + pkg);
-        }
-        return root;
+        throw new UnableToFindPackageException("Unable to find this package: " + pkg);
     }
 
     private Class loadClass(String cls) {
         try {
             return this.getClass().getClassLoader().loadClass(cls);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("For some reason I cannot load this class: " + cls, e);
+            //ignore it...
+            return null;
         }
     }
 

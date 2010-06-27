@@ -65,6 +65,27 @@ public class SimpleClasspathExplorerTest {
     }
 
     @Test
+    public void shouldSearchRecursively() throws Exception {
+        //given
+        String pkg = "org/accept";
+
+        //when
+        final Set stepClasses = new HashSet();
+        e.findClasses(pkg, new ClassHandler() {
+            public void handle(Class cls) {
+                if (cls.isAnnotationPresent(DomainSteps.class)) {
+                    stepClasses.add(cls);
+                }
+            }
+        });
+
+        //then
+        assertThat(stepClasses)
+                .contains(ClassToFindByAnnotation.class)
+                .excludes(ClassToFindInheritence.class);
+    }
+
+    @Test
     public void shouldSaySomethingDecentIfPackageNotFound() throws Exception {
         //given
         String pkg = "i/dont/exist";
