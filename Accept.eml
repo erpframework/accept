@@ -5,6 +5,7 @@
 		<testFolder url="file://$MODULE_DIR$/test"/>
 		<excludeFolder url="file://$MODULE_DIR$/.gradle"/>
 		<excludeFolder url="file://$MODULE_DIR$/.settings"/>
+		<excludeFolder url="file://$MODULE_DIR$/bin"/>
 		<excludeFolder url="file://$MODULE_DIR$/build"/>
 		<excludeFolder url="file://$MODULE_DIR$/bin"/>
 	</contentEntry>
@@ -22,7 +23,7 @@
 	<lib name="mockito-all-1.8.5.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/Accept/lib/test/mockito-all-1.8.5.jar!/"/>
 	</lib>
-	<lib name="C:\projects\ph-workspace\Accept\lib\compile\givwenzen-1.0.1-SNAPSHOT.jar" scope="COMPILE">
+	<lib name="givwenzen-1.0.1-SNAPSHOT.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/Accept/lib/compile/givwenzen-1.0.1-SNAPSHOT.jar!/"/>
 	</lib>
 </component>
