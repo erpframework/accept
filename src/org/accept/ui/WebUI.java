@@ -3,14 +3,13 @@ package org.accept.ui;
 import java.io.File;
 import java.util.logging.Logger;
 
-import com.sabre.tinyweb.internal.nano.NanoWebEngine;
+import org.tinyweb.internal.nano.NanoWebEngine;
 import org.accept.domain.ValidationResult;
 import org.accept.impl.gwz.GiveWenZenAccept;
 
-import com.sabre.tinyweb.Request;
-import com.sabre.tinyweb.WebApplication;
-import com.sabre.tinyweb.WebPage;
-import org.accept.impl.settings.AcceptSettings;
+import org.tinyweb.Request;
+import org.tinyweb.WebApplication;
+import org.tinyweb.WebPage;
 import org.accept.impl.settings.Settings;
 import org.accept.util.commandline.CommandLineConfig;
 import org.accept.util.exception.StackTracePrinter;
