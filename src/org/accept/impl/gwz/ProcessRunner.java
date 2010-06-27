@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.accept.domain.ValidationResult;
 import org.accept.util.files.FileIO;
-import org.json.JSONObject;
+import org.accept.json.JSONObject;
 
 public class ProcessRunner {
 

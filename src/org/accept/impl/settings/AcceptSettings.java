@@ -1,13 +1,9 @@
 package org.accept.impl.settings;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.html.HTMLMetaElement;
+import org.accept.json.JSONArray;
+import org.accept.json.JSONException;
+import org.accept.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**

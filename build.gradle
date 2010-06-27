@@ -1,6 +1,6 @@
 apply 'plugin' : 'java'
 
-version = '0.9-SNAPSHOT'
+version = '1.0-SNAPSHOT'
 
 sourceSets {
     main {
@@ -19,6 +19,7 @@ sourceSets {
 
 dependencies {
 	compile fileTree(dir: 'lib', include: ['compile/*.jar', 'provided/*.jar'])
+    testCompile fileTree(dir: 'lib/test')
 }
 
 jar {
@@ -28,7 +29,9 @@ jar {
     }
   }
 
-  from('html')
+  from('root').exclude('calculator', 'accept.properties')
+
+  exclude('bdd')
 }
 
 manifest.mainAttributes(

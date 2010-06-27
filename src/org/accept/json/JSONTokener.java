@@ -1,4 +1,4 @@
-package org.json;
+package org.accept.json;
 
 import java.io.BufferedReader;
 import java.io.IOException;

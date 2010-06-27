@@ -1,3 +1,5 @@
+package bdd.steps;
+
 import org.accept.api.AcceptRunner;
 import org.accept.api.RootFolder;
 import org.junit.runner.RunWith;

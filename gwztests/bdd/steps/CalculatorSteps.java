@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.givwenzen.annotations.DomainStep;
 import org.givwenzen.annotations.DomainSteps;
 
-import com.calculator.Calculator;
-
 @DomainSteps
 public class CalculatorSteps {
 	

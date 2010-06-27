@@ -1,6 +1,6 @@
 package org.accept.domain;
 
-import org.json.JSONObject;
+import org.accept.json.JSONObject;
 
 public class ValidationResult {
 
