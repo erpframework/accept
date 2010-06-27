@@ -3,7 +3,9 @@ package org.accept.impl.settings;
 import org.accept.impl.settings.AcceptSettings;
 import org.junit.Test;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -16,11 +18,11 @@ import static org.junit.Assert.assertTrue;
 public class AcceptSettingsTest {
 
     AcceptSettings settings = new AcceptSettings("path=./bin\n" +
-                "#this path is just an example:\n" +
+                "#commented out:\n" +
                 "this is a line without '=' \n" +
                 "path=lib/test/givwenzen-with-dependencies-1.0.jar\n" +
                 "path=lib/test/junit-4.8.2.jar\n" +
-                "java=java", ";");
+                "java=java -Xmx256m", ";");
 
     @Test
     public void shouldParseJavaClassPath() throws Exception {
@@ -28,28 +30,31 @@ public class AcceptSettingsTest {
         String cp = settings.getJavaClassPath();
 
         //then
-        assertEquals("-cp ./bin;lib/test/givwenzen-with-dependencies-1.0.jar;lib/test/junit-4.8.2.jar", cp);
+        assertThat(cp)
+            .startsWith("-cp ")
+            .endsWith("./bin;lib/test/givwenzen-with-dependencies-1.0.jar;lib/test/junit-4.8.2.jar");
     }
 
     @Test
     public void shouldParseJavaCommand() throws Exception {
-        assertEquals("java", settings.getJavaCommand());
+        assertEquals("java -Xmx256m", settings.getJavaCommand());
     }
     
     @Test
     public void shouldBuildCommand() throws Exception {
-        assertTrue(settings.buildCommand().startsWith("java -cp ./bin;"));
+        assertTrue(settings.buildCommand().startsWith("java -Xmx256m -cp "));
     }
 
     @Test
     public void shouldAllowComments() throws Exception {
-        assertTrue(settings.buildCommand().startsWith("java -cp ./bin;"));
+        assertFalse(settings.buildCommand().contains("commented out"));
     }
 
     @Test
     public void shouldBuildClasspathCorrectly() throws Exception {
-        assertEquals("-cp foo", new AcceptSettings("path=foo", ":").getJavaClassPath());
-        assertEquals("-cp foo:bar", new AcceptSettings("path=foo\npath=bar", ":").getJavaClassPath());
-        assertEquals("", new AcceptSettings("").getJavaClassPath());
+        String javaCp = System.getProperty("java.class.path");
+        assertThat(new AcceptSettings("path=foo", ":").getJavaClassPath()).isEqualTo("-cp " + javaCp + ":foo");
+        assertThat(new AcceptSettings("path=foo\npath=bar", ":").getJavaClassPath()).isEqualTo("-cp " + javaCp + ":foo:bar");
+        assertThat(new AcceptSettings("").getJavaClassPath()).isEqualTo("-cp " + javaCp);
     }
 }

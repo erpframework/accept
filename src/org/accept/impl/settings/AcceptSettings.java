@@ -50,15 +50,13 @@ public class AcceptSettings {
 
     public String getJavaClassPath() {
         StringBuilder cp = new StringBuilder();
+        String thisCp = System.getProperty("java.class.path");
+        cp.append("-cp ").append(thisCp);
+
         JSONArray arr = settings.getJSONArraySmartly("path");
         for(int i = 0 ; i < arr.length() ; i++) {
-            if (cp.length() == 0) {
-                cp.append("-cp ");
-            } else {
-                cp.append(separator);
-            }
-            String value = arr.get(i).toString();
-            cp.append(value);
+            cp.append(separator);
+            cp.append(arr.get(i).toString());
         }
         return cp.toString();
     }
