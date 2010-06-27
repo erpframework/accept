@@ -67,6 +67,12 @@ public class WebUI {
     }
 
     @WebPage
+    public String kill(Request request) throws Exception {
+        String guid = request.getParameters().get("guid");
+        return accept.kill(guid);
+    }
+
+    @WebPage
     public String saveSettings(Request request) throws Exception {
         String s = request.getParameters().get("settings");
         settings.save(s);

@@ -6,12 +6,15 @@
 	<script type="text/javascript" src="res/jqueryFileTree.js" ></script>
 	<script type="text/javascript" src="res/jquery.ajaxmanager.js" ></script>
 	<script type="text/javascript" src="res/jquery.jquery.tooltip.min.js" ></script>
+	<script type="text/javascript" src="res/jquery.loadmask.min.js" ></script>
 
     <link href="res/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="res/jquery.tooltip.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="res/jquery.loadmask.css" rel="stylesheet" type="text/css" media="screen" />
 
 	<script type="text/javascript">
 
+        //TODO: very lame
         var validationStarted = false;
 
 		function validate(idx, file_name) {
@@ -22,7 +25,7 @@
 
             validation_started(idx);
             $('#full_log'+idx).html('Started.')
-            $('#message'+idx).html('Started. See the full log for output.')
+            $('#message'+idx).html('Started. See the full log for real-time output.')
 
             if (!file_name) { file_name = '' }
 
@@ -33,7 +36,7 @@
             var updater_handle = $.PeriodicalUpdater('getProgress', {
                 method: 'get',
                 data: { guid: guid },
-                minTimeout: 2000,       // starting value for the timeout in milliseconds
+                minTimeout: 1000,       // starting value for the timeout in milliseconds
                 maxTimeout: 8000,       // maximum length of time between requests
                 multiplier: 2,          // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
                 type: 'text',           // response type - text, xml, json, etc.  See $.ajax config options
@@ -43,6 +46,8 @@
                 $('#full_log'+idx).html(data);
             });
 
+            $('#kill').attr('guid', guid);
+            $('#kill').fadeIn();
 			$.ajax({ url:'validate', type: 'POST', data: {'content' : content, 'guid' : guid, 'fileName' : file_name},
 				success:function(data) {
                     updater_handle.stop();
@@ -50,7 +55,7 @@
 				    $('#message'+idx).html(result.message)
 					$('#full_log'+idx).html(result.output || 'No output was captured.');
 					$('#progress'+idx).removeClass().addClass('p_' + result.status);
-					if (result.status != 'green') {
+					if (result.status == 'red') {
 						var pointer_txt = '\n';
 						for (var i = 0 ; i < result.stepIndex ; i++) {
 							pointer_txt += '\n';
@@ -59,8 +64,18 @@
 						$('#pointer'+idx).html(pointer_txt);
 					}
                     validationStarted = false;
-				}} );
+				},
+                complete:function(req, status) {
+                    $('#kill').fadeOut();
+                }} );
 		}
+
+        function kill() {
+            var guid = $('#kill').attr('guid');
+            $.ajax( { url:'kill', type: 'GET', data: { 'guid' : guid }, success: function(data) {
+                validationStarted = false;
+            }} );
+        }
 
         function save_settings() {
             var settings = $('#settings').attr('value');
@@ -172,24 +187,30 @@
     <p><span style="font-size:xx-large;">Stories&nbsp;</span><img class="help" title="Lists folders and *.story files found in the application root folder" src="res/images/help.png" /><p>
     <div id="files_div"></div>
     <div id="current_story">
-        <div><h3><a href="#" onclick="javascript:validate('_x')">Validate now!</a> <img class="help" title="Starts validation process. Will fork a java process on the server and execut the acceptance. Will use the latest settings." src="res/images/help.png" /></h3></div>
-        <textarea style="   color:#CC0033" id="pointer_x" cols="1" rows="10" readonly="readonly"></textarea>
-        <textarea id="content_x" cols="60" rows="10">Above you see the list of stories - clicking on story will put here the acceptance of selected story.
+        <div id="acceptance">
+            <h3>
+                <a href="#" onclick="javascript:validate('_x')">Validate now!</a>
+                <img class="help" title="Starts validation process. Will fork a java process on the server and execut the acceptance. Will use the latest settings." src="res/images/help.png" />
+                <a id="kill" href="#" onclick="javascript:kill()" style="display:none;" >Kill process!</a>
+            </h3>
+            <textarea style="   color:#CC0033" id="pointer_x" cols="1" rows="10" readonly="readonly"></textarea>
+            <textarea id="content_x" cols="60" rows="10">Above you see the list of stories - clicking on story will put here the acceptance of selected story.
 
 You can also type here the acceptance criteria by hand. This allows you *learn* how the system works.</textarea>
+        </div>
         <div id="progress_x" class="p_not_run">
-        			<h3>
-        				<a href="#" onclick="javascript:show_info('_x')">Info</a>
-        				/ <a href="#" onclick="javascript:show_full_log('_x')">Full log</a>
-                        <img class="help" title="Info shows only important messages. Full log shows the entire output incrementally, refreshing every few seconds." src="res/images/help.png" />
-        			</h3>
-        		</div>
-	            <div id="info_tab_x" >
-	                <pre id="message_x" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
-	            </div>
-	            <div id="full_log_tab_x" style="display:none;" >
-	                <pre id="full_log_x" cols="80" rows="10" readonly="true">Full log: not validated yet</pre>
-	            </div>
+            <h3>
+                <a href="#" onclick="javascript:show_info('_x')">Info</a>
+                / <a href="#" onclick="javascript:show_full_log('_x')">Full log</a>
+                <img class="help" title="Info shows only important messages. Full log shows the entire output incrementally, refreshing every few seconds." src="res/images/help.png" />
+            </h3>
+        </div>
+        <div id="info_tab_x" >
+            <pre id="message_x" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
+        </div>
+        <div id="full_log_tab_x" style="display:none;" >
+            <pre id="full_log_x" cols="80" rows="10" readonly="true">Full log: not validated yet</pre>
+        </div>
     </div>
 
   </body>

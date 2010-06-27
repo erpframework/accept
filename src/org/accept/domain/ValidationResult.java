@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class ValidationResult {
 
-    public enum Status { red, green };
+    public enum Status { red, green, not_run };
 	
 	private String output;
 	private Enum<Status> status;

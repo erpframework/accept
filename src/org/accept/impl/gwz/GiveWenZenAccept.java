@@ -92,4 +92,9 @@ public class GiveWenZenAccept {
                 "Then\n" +
                 "  The calculator shows 17");
     }
+
+    public String kill(String guid) {
+        runner.kill(guid);
+        return "Process with guid: " + guid + " has been killed!";
+    }
 }

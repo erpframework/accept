@@ -6,21 +6,38 @@ import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.accept.domain.ValidationResult;
 import org.accept.util.files.FileIO;
 import org.json.JSONObject;
 
 public class ProcessRunner {
 
-    private static ConcurrentMap map = new ConcurrentHashMap();
+    private static ConcurrentMap<String, Proc> map = new ConcurrentHashMap();
+
+    static class Proc {
+        StringBuffer output;
+        Process process;
+        boolean killed = false;
+
+        public Proc(StringBuffer output, Process process) {
+            this.output = output;
+            this.process = process;
+        }
+
+        public void destroy() {
+            killed = true;
+            this.process.destroy();
+        }
+    }
 
 	public String run(String command, File output, String guid) {
 		StringBuffer sb = new StringBuffer();
-        map.put(guid, sb);
 		try {
 			ProcessBuilder pb = new ProcessBuilder(command.split("\\s"))
 				.redirectErrorStream(true);
 
 			Process p = pb.start();
+            map.put(guid, new Proc(sb, p));
 	        
 	        BufferedReader stdInput = new BufferedReader(new 
 	             InputStreamReader(p.getInputStream()));
@@ -31,13 +48,22 @@ public class ProcessRunner {
 	        }
 	        
 	        String resultJson = new FileIO().read(output);
-            if (resultJson.trim().length() == 0) {
-                throw new RuntimeException("Process did not end gracefully");
+            if (resultJson.trim().length() != 0) {
+                JSONObject json = new JSONObject(resultJson);
+                json.put("output", sb.toString());
+                return json.toString();
+            } else if (map.get(guid).killed) {
+                ValidationResult result = new ValidationResult();
+                result.setMessage("Killed by user!");
+                String outputSoFar = map.get(guid).output.toString();
+                result.setOutput(outputSoFar + "\n*********************\n" +
+                        "Killed by user!");
+                result.setStatus(ValidationResult.Status.not_run);
+                return result.toJSON();
+            } else {
+                throw new RuntimeException("Process did not end gracefully.");
             }
-	        JSONObject json = new JSONObject(resultJson);
-	        json.put("output", sb.toString());
-	        
-	        return json.toString();
+
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to run this command:\n" + command +
 					"\nNested exception is: " + e.getMessage() + "\n" +
@@ -46,6 +72,10 @@ public class ProcessRunner {
 	}
 
     public String getOutput(String guid) {
-        return map.get(guid).toString();
+        return map.get(guid).output.toString();
+    }
+
+    public void kill(String guid) {
+        map.get(guid).destroy();
     }
 }
