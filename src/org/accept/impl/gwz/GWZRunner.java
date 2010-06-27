@@ -5,14 +5,13 @@ import java.util.*;
 
 import org.accept.domain.ValidationResult;
 import org.accept.util.classpath.SimpleClasspathExplorer;
-import org.accept.util.exception.StackTracePrinter;
 import org.givwenzen.*;
 import org.givwenzen.annotations.MarkedClass;
 
 public class GWZRunner {
     private StepsExtractor stepsExtractor = new StepsExtractor();
 
-    public void runContent(String content, File contentFile) {
+    public void runExplosively(String content, File contentFile) {
         IDomainStepFinder finder = new MyDomainStepFinder();
 
         List<String> steps = new LinkedList<String>();
@@ -36,7 +35,7 @@ public class GWZRunner {
 
 	public ValidationResult run(String content, File contentFile) {
         try {
-            this.runContent(content, contentFile);
+            this.runExplosively(content, contentFile);
         } catch (GWZException e) {
             return new ValidationResult(e.stepIndex, e.step, e.cause.getMessage(), e.cause);
         }

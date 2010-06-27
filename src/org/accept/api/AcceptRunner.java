@@ -3,18 +3,12 @@ package org.accept.api;
 import org.accept.impl.gwz.GWZRunner;
 import org.accept.impl.junit.AcceptFrameworkMethod;
 import org.accept.impl.junit.JUnitSucks;
-import org.junit.runner.Description;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runner.manipulation.NoTestsRemainException;
-import org.junit.runner.manipulation.Sorter;
-import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 import java.lang.annotation.Annotation;
-import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -64,7 +58,7 @@ public class AcceptRunner extends BlockJUnit4ClassRunner {
             @Override
             public void evaluate() throws Throwable {
                 AcceptFrameworkMethod m = (AcceptFrameworkMethod) method;
-                new GWZRunner().runContent(m.content, m.file);
+                new GWZRunner().runExplosively(m.content, m.file);
             }
         };
         return s;
