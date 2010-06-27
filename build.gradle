@@ -36,7 +36,8 @@ jar {
 
 manifest.mainAttributes(
   'Main-Class': 'org.accept.ui.WebUI',
-  'Implementation-Version': version        
+  'Implementation-Version': version,
+  'Implementation-Vendor': 'Szczepan Faber'
 )
 
 defaultTasks "clean", "build", "test", "jar"
