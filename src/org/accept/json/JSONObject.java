@@ -1580,10 +1580,9 @@ public class JSONObject {
 		Object o = get(key);
 		if (o instanceof JSONArray) {
 			return (JSONArray) o;
-		} else if (o instanceof JSONObject) {			
+		} else {
 			arr.put(o);
-			return arr;
-		}
+        }
 		return arr;
 	}
 }

@@ -1,24 +1,25 @@
 package org.accept.ui;
 
-import java.io.File;
-import java.util.logging.Logger;
-
-import org.tinyweb.internal.nano.NanoWebEngine;
 import org.accept.domain.ValidationResult;
-import org.accept.impl.gwz.GiveWenZenAccept;
-
-import org.tinyweb.Request;
-import org.tinyweb.WebApplication;
-import org.tinyweb.WebPage;
+import org.accept.impl.gwz.GWZAccept;
 import org.accept.impl.settings.Settings;
 import org.accept.util.commandline.CommandLineConfig;
 import org.accept.util.exception.StackTracePrinter;
+import org.tinyweb.Request;
+import org.tinyweb.WebApplication;
+import org.tinyweb.WebPage;
+import org.tinyweb.internal.nano.NanoWebEngine;
+
+import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 public class WebUI {
 
     Settings settings = new Settings();
 
-    GiveWenZenAccept accept = new GiveWenZenAccept();
+    GWZAccept accept = new GWZAccept();
     final static Logger log = Logger.getLogger(WebUI.class.toString());
 
     @WebPage
@@ -91,7 +92,16 @@ public class WebUI {
         app.addWebPage(new WebUI());
         app.start(port);
 
-        //TODO: tooltips
+        System.out.println("*********************");
+        System.out.println("Welcome to the Accept tool! (Hit enter to stop the tool)");
+        System.out.println("Listening on port: " + port + " (you can change the port passing param: -port 8888");
+        try {
+            System.out.println("Go to the app: http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port + "/index.html");
+        } catch (UnknownHostException e) {}
+        System.out.println("*********************");
+
+        try { System.in.read(); } catch( Throwable t ) {};
+
         //TODO: @BeforeStep, @AfterStep for GivWenZen
     }
 }

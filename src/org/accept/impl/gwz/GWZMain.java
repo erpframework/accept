@@ -5,7 +5,7 @@ import java.io.File;
 import org.accept.domain.ValidationResult;
 import org.accept.util.files.FileIO;
 
-public class GivWenZenMain {
+public class GWZMain {
 	
 	public static void main(String[] args) throws Throwable {
         //The communication with the process is based on temp files...

@@ -8,7 +8,6 @@ import org.accept.util.classpath.SimpleClasspathExplorer;
 import org.accept.util.exception.StackTracePrinter;
 import org.givwenzen.*;
 import org.givwenzen.annotations.MarkedClass;
-import sun.text.normalizer.TrieIterator;
 
 public class GWZRunner {
     private StepsExtractor stepsExtractor = new StepsExtractor();

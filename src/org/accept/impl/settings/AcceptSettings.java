@@ -16,13 +16,19 @@ import java.util.StringTokenizer;
 public class AcceptSettings {
     
     private JSONObject settings;
+    private String separator = System.getProperty("path.separator");
 
     public AcceptSettings(String content) {
         init(content);
     }
 
+    AcceptSettings(String content, String separator) {
+        this.separator = separator; 
+        init(content);
+    }
+
     private void init(String content) {
-        StringTokenizer t = new StringTokenizer(content, "\n");
+        StringTokenizer t = new StringTokenizer(content + "\n", "\n");
         this.settings = new JSONObject();
         while(t.hasMoreTokens()) {
             String token = t.nextToken().trim();
@@ -39,18 +45,22 @@ public class AcceptSettings {
     }
 
     public String buildCommand() {
-        return getJavaCommand() + " -cp " + getJavaClassPath();
+        return getJavaCommand() + " " + getJavaClassPath();
     }
 
     public String getJavaClassPath() {
         StringBuilder cp = new StringBuilder();
         JSONArray arr = settings.getJSONArraySmartly("path");
         for(int i = 0 ; i < arr.length() ; i++) {
+            if (cp.length() == 0) {
+                cp.append("-cp ");
+            } else {
+                cp.append(separator);
+            }
             String value = arr.get(i).toString();
-            cp.append(value).append(";");
+            cp.append(value);
         }
-        String cps = cp.toString();
-        return cps;
+        return cp.toString();
     }
 
     public String getJavaCommand() {

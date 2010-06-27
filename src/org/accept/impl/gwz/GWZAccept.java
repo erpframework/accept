@@ -9,11 +9,10 @@ import java.util.logging.Logger;
 import org.accept.impl.settings.AcceptSettings;
 import org.accept.impl.settings.Settings;
 import org.accept.util.files.FileIO;
-import org.accept.util.files.FolderActions;
 
-public class GiveWenZenAccept {
+public class GWZAccept {
 	
-	final static Logger log = Logger.getLogger(GiveWenZenAccept.class.toString());
+	final static Logger log = Logger.getLogger(GWZAccept.class.toString());
     ProcessRunner runner = new ProcessRunner();
 
 	public String validate(String content, Settings settings, String guid) {
@@ -22,7 +21,7 @@ public class GiveWenZenAccept {
 		File output = new FileIO().createTempFile();
 
         AcceptSettings acceptSettings = new AcceptSettings(settings.getContent());
-        String command = acceptSettings.buildCommand() + " org.accept.impl.gwz.GivWenZenMain " + input + " " + output;
+        String command = acceptSettings.buildCommand() + " org.accept.impl.gwz.GWZMain " + input + " " + output;
 
 		log.info("About to run this command: \n" + command);
 
@@ -82,7 +81,7 @@ public class GiveWenZenAccept {
             throw new RuntimeException("Unable to create file: " + file, e);
         }
         new FileIO().write(file, "#I generated this example for you\n" +
-                "#because there were no stories in " + dir.getPath() + " folder\n" +
+                "#because there were no stories in " + dir.getAbsolutePath()  + " folder\n" +
                 "Given\n" +
                 "  calculator is turned on\n" +
                 "  I enter 7\n" +

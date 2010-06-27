@@ -20,7 +20,7 @@ public class AcceptSettingsTest {
                 "this is a line without '=' \n" +
                 "path=lib/test/givwenzen-with-dependencies-1.0.jar\n" +
                 "path=lib/test/junit-4.8.2.jar\n" +
-                "java=java");
+                "java=java", ";");
 
     @Test
     public void shouldParseJavaClassPath() throws Exception {
@@ -28,7 +28,7 @@ public class AcceptSettingsTest {
         String cp = settings.getJavaClassPath();
 
         //then
-        assertEquals("./bin;lib/test/givwenzen-with-dependencies-1.0.jar;lib/test/junit-4.8.2.jar;", cp);
+        assertEquals("-cp ./bin;lib/test/givwenzen-with-dependencies-1.0.jar;lib/test/junit-4.8.2.jar", cp);
     }
 
     @Test
@@ -44,5 +44,12 @@ public class AcceptSettingsTest {
     @Test
     public void shouldAllowComments() throws Exception {
         assertTrue(settings.buildCommand().startsWith("java -cp ./bin;"));
+    }
+
+    @Test
+    public void shouldBuildClasspathCorrectly() throws Exception {
+        assertEquals("-cp foo", new AcceptSettings("path=foo", ":").getJavaClassPath());
+        assertEquals("-cp foo:bar", new AcceptSettings("path=foo\npath=bar", ":").getJavaClassPath());
+        assertEquals("", new AcceptSettings("").getJavaClassPath());
     }
 }
