@@ -5,6 +5,7 @@ import org.accept.impl.gwz.GWZAccept;
 import org.accept.impl.settings.Settings;
 import org.accept.util.commandline.CommandLineConfig;
 import org.accept.util.exception.StackTracePrinter;
+import org.accept.util.files.FileIO;
 import org.tinyweb.Request;
 import org.tinyweb.WebApplication;
 import org.tinyweb.WebPage;
@@ -53,8 +54,9 @@ public class WebUI {
             return accept.validate(content, settings, guid);
         } catch (Throwable e) {
             ValidationResult result = new ValidationResult();
-            result.appendOutput(new StackTracePrinter().print(e));
-            result.setMessage("Unable to validate the story. The cause is:\n" + e.getMessage());
+            String msg = "Unable to validate the story. The cause is:\n" + e.getMessage();
+            result.setOutput(new StackTracePrinter().print(e));
+            result.setMessage(msg);
             result.setStatus(ValidationResult.Status.red);
             return result.toJSON();
         }

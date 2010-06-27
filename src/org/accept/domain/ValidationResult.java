@@ -25,13 +25,6 @@ public class ValidationResult {
 		status = Status.red;
 	}
 
-    public void appendOutput(String text) {
-        if (output == null) {
-            output = text;
-        }
-        output += "\n" + text;
-    }
-
 	public String toJSON() {
 		return new JSONObject(this).toString();
 	}

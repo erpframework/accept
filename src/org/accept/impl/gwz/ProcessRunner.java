@@ -46,7 +46,7 @@ public class ProcessRunner {
 	        while ((s = stdInput.readLine()) != null) {
 	        	sb.append(s + "\n");
 	        }
-	        
+
 	        String resultJson = new FileIO().read(output);
             if (resultJson.trim().length() != 0) {
                 JSONObject json = new JSONObject(resultJson);
@@ -61,14 +61,13 @@ public class ProcessRunner {
                 result.setStatus(ValidationResult.Status.not_run);
                 return result.toJSON();
             } else {
-                throw new RuntimeException("Process did not end gracefully.");
+                throw new RuntimeException("Process did not start or end gracefully.");
             }
-
 		} catch (Exception e) {
-			throw new RuntimeException("Unable to run this command:\n" + command +
-					"\nNested exception is: " + e.getMessage() + "\n" +
-                    "\nThe output from process so far was:\n" + sb.toString() + "\n", e);
-		}		
+			throw new RuntimeException("Unable to fork java process.\n" +
+					"Nested exception is: " + e.getMessage() + "\n" +
+                    "\nThe output from process so far was:\n********************\n" + sb.toString() + "\n", e);
+		}
 	}
 
     public String getOutput(String guid) {
