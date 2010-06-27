@@ -11,6 +11,7 @@ import java.io.StringWriter;
  * To change this template use File | Settings | File Templates.
  */
 public class StackTracePrinter {
+    //TODO: is it needed?
     public String print(Throwable e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
