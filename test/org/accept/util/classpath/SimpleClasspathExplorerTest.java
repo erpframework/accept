@@ -24,18 +24,8 @@ public class SimpleClasspathExplorerTest {
 
     @Test
     public void shouldSearchClasspathForAnnotatedClasses() throws Exception {
-        //given
-        String pkg = "org/accept/util/classpath";
-
         //when
-        final Set stepClasses = new HashSet();
-        e.findClasses(pkg, new ClassHandler() {
-            public void handle(Class cls) {
-                if (cls.isAnnotationPresent(DomainSteps.class)) {
-                    stepClasses.add(cls);
-                }
-            }
-        });
+        final Set stepClasses = findAnnotatedWithDomainSteps("org/accept/util/classpath");
 
         //then
         assertThat(stepClasses)
@@ -66,10 +56,15 @@ public class SimpleClasspathExplorerTest {
 
     @Test
     public void shouldSearchRecursively() throws Exception {
-        //given
-        String pkg = "org/accept";
-
         //when
+        final Set stepClasses = findAnnotatedWithDomainSteps("org/accept");
+
+        //then
+        assertThat(stepClasses)
+                .contains(ClassToFindByAnnotation.class);
+    }
+
+    private Set findAnnotatedWithDomainSteps(String pkg) {
         final Set stepClasses = new HashSet();
         e.findClasses(pkg, new ClassHandler() {
             public void handle(Class cls) {
@@ -78,11 +73,7 @@ public class SimpleClasspathExplorerTest {
                 }
             }
         });
-
-        //then
-        assertThat(stepClasses)
-                .contains(ClassToFindByAnnotation.class)
-                .excludes(ClassToFindInheritence.class);
+        return stepClasses;
     }
 
     @Test
