@@ -17,19 +17,19 @@
         //TODO: very lame
         var validationStarted = false;
 
-		function validate(idx, file_name) {
+		function validate(file_name) {
             if (validationStarted) {
                 return;
             }
             validationStarted = true;
 
-            validation_started(idx);
-            $('#full_log'+idx).html('Started.')
-            $('#message'+idx).html('Started. See the full log for real-time output.')
+            validation_started();
+            $('#full_log').html('Started.')
+            $('#message').html('Started. See the full log for real-time output.')
 
             if (!file_name) { file_name = '' }
 
-		    var content = $('#content' + idx).attr('value');
+		    var content = $('#content').attr('value');
 
             var guid = $.Guid.New();
 
@@ -43,7 +43,7 @@
                 maxCalls: 0,            // maximum number of calls. 0 = no limit.
                 autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
             }, function(data) {
-                $('#full_log'+idx).html(data);
+                $('#full_log').html(data);
             });
 
             $('#kill').attr('guid', guid);
@@ -52,16 +52,16 @@
 				success:function(data) {
                     updater_handle.stop();
 				    eval("var result = " + data);
-				    $('#message'+idx).html(result.message)
-					$('#full_log'+idx).html(result.output || 'No output was captured.');
-					$('#progress'+idx).removeClass().addClass('p_' + result.status);
+				    $('#message').html(result.message)
+					$('#full_log').html(result.output || 'No output was captured.');
+					$('#progress').removeClass().addClass('p_' + result.status);
 					if (result.status == 'red') {
 						var pointer_txt = '\n';
 						for (var i = 0 ; i < result.stepIndex-1 ; i++) {
 							pointer_txt += '\n';
 						}	
 						pointer_txt += '>>>';				
-						$('#pointer'+idx).html(pointer_txt);
+						$('#pointer').html(pointer_txt);
 					}
                     validationStarted = false;
 				},
@@ -86,26 +86,26 @@
             });
 		}
 		
-		function show_info(idx) {
-			$('#full_log_tab' + idx).hide();
-            $('#info_tab' + idx).hide();
-            $('#info_tab' + idx).fadeIn();
+		function show_info() {
+			$('#full_log_tab').hide();
+            $('#info_tab').hide();
+            $('#info_tab').fadeIn();
 		}
 
-        function validation_started(idx) {
-            if ($('#info_tab' + idx).is(':visible')) {
-                show_info(idx);
+        function validation_started() {
+            if ($('#info_tab').is(':visible')) {
+                show_info();
             } else {
-                show_full_log(idx);
+                show_full_log();
             }
-            $('#pointer'+idx).html('');
-            $('#progress'+idx).removeClass().addClass('p_not_run');
+            $('#pointer').html('');
+            $('#progress').removeClass().addClass('p_not_run');
         }
-		
-		function show_full_log(idx) {
-			$('#info_tab' + idx).hide();
-            $('#full_log_tab' + idx).hide();
-            $('#full_log_tab' + idx).fadeIn();
+		      
+		function show_full_log() {
+			$('#info_tab').hide();
+            $('#full_log_tab').hide();
+            $('#full_log_tab').fadeIn();
 		}
 
         function open_settings() {
@@ -130,10 +130,10 @@
                 multiFolder: true
             }, function(file) {
                 $.ajax( { url: file, success:function(data) {
-                        $('#full_log_x').html('Full log: not validated yet.')
-                        $('#message_x').html('Info: not validated yet.')
-                        $('#content_x').attr('value', data);
-                        validation_started('_x');
+                        $('#full_log').html('Full log: not validated yet.')
+                        $('#message').html('Info: not validated yet.')
+                        $('#content').attr('value', data);
+                        validation_started();
                     }
                 });
             });
@@ -189,27 +189,27 @@
     <div id="current_story">
         <div id="acceptance">
             <h3>
-                <a href="#" onclick="javascript:validate('_x')">Validate now!</a>
+                <a href="#" onclick="javascript:validate()">Validate now!</a>
                 <img class="help" title="Starts validation process. Will fork a java process on the server and execut the acceptance. Will use the latest settings." src="res/images/help.png" />
                 <a id="kill" href="#" onclick="javascript:kill()" style="display:none;" >Kill process!</a>
             </h3>
-            <textarea style="   color:#CC0033" id="pointer_x" cols="1" rows="10" readonly="readonly"></textarea>
-            <textarea id="content_x" cols="60" rows="10">Above you see the list of stories - clicking on story will put here the acceptance of selected story.
+            <textarea style="   color:#CC0033" id="pointer" cols="1" rows="10" readonly="readonly"></textarea>
+            <textarea id="content" cols="60" rows="10">Above you see the list of stories - clicking on story will put here the acceptance of selected story.
 
 You can also type here the acceptance criteria by hand. This allows you *learn* how the system works.</textarea>
         </div>
-        <div id="progress_x" class="p_not_run">
+        <div id="progress" class="p_not_run">
             <h3>
-                <a href="#" onclick="javascript:show_info('_x')">Info</a>
-                / <a href="#" onclick="javascript:show_full_log('_x')">Full log</a>
+                <a href="#" onclick="javascript:show_info()">Info</a>
+                / <a href="#" onclick="javascript:show_full_log()">Full log</a>
                 <img class="help" title="Info shows only important messages. Full log shows the entire output incrementally, refreshing every few seconds." src="res/images/help.png" />
             </h3>
         </div>
-        <div id="info_tab_x" >
-            <pre id="message_x" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
+        <div id="info_tab" >
+            <pre id="message" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
         </div>
-        <div id="full_log_tab_x" style="display:none;" >
-            <pre id="full_log_x" cols="80" rows="10" readonly="true">Full log: not validated yet</pre>
+        <div id="full_log_tab" style="display:none;" >
+            <pre id="full_log" cols="80" rows="10" readonly="true">Full log: not validated yet</pre>
         </div>
     </div>
 
