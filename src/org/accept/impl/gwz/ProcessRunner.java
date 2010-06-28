@@ -42,7 +42,7 @@ public class ProcessRunner {
 	        BufferedReader stdInput = new BufferedReader(new 
 	             InputStreamReader(p.getInputStream()));
 	
-	        String s = null;
+	        String s;
 	        while ((s = stdInput.readLine()) != null) {
 	        	sb.append(s + "\n");
 	        }
@@ -50,16 +50,14 @@ public class ProcessRunner {
 	        String resultJson = new FileIO().read(output);
             if (resultJson.trim().length() != 0) {
                 JSONObject json = new JSONObject(resultJson);
-                json.put("output", sb.toString());
+                json.put("fullLog", sb.toString());
                 return json.toString();
             } else if (map.get(guid).killed) {
-                ValidationResult result = new ValidationResult();
-                result.setMessage("Killed by user!");
                 String outputSoFar = map.get(guid).output.toString();
-                result.setOutput(outputSoFar + "\n*********************\n" +
-                        "Killed by user!");
-                result.setStatus(ValidationResult.Status.not_run);
-                return result.toJSON();
+                return new ValidationResult()
+                    .setInfo("Killed by user!")
+                    .setFullLog(outputSoFar + "\n*********************\n" + "Killed by user!")
+                    .setStatus(ValidationResult.Status.not_run).toJSON();
             } else {
                 throw new RuntimeException("Process did not start or end gracefully.");
             }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import org.accept.domain.ValidationResult;
 import org.accept.impl.settings.AcceptSettings;
 import org.accept.impl.settings.Settings;
 import org.accept.util.files.FileIO;

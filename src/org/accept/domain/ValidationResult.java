@@ -6,21 +6,21 @@ public class ValidationResult {
 
     public enum Status { red, green, not_run };
 	
-	private String output;
+	private String fullLog;
 	private Enum<Status> status;
 	private int stepIndex;
 	private String step;
-	private String message;
+	private String info;
 	private Throwable exception;
 
 	public ValidationResult() {
 		status = Status.green;
 	}
 
-	public ValidationResult(int stepIndex, String step, String message, Throwable e) {
+	public ValidationResult(int stepIndex, String step, String info, Throwable e) {
 		this.stepIndex = stepIndex;
 		this.step = step;
-		this.message = message;
+		this.info = info;
 		this.exception = e;
 		status = Status.red;
 	}
@@ -29,20 +29,22 @@ public class ValidationResult {
 		return new JSONObject(this).toString();
 	}
 
-	public String getOutput() {
-		return output;
+	public String getFullLog() {
+		return fullLog;
 	}
 
-	public void setOutput(String output) {
-		this.output = output;
+	public ValidationResult setFullLog(String fullLog) {
+		this.fullLog = fullLog;
+        return this;
 	}
 
 	public String getStatus() {
 		return status.name();
 	}
 
-	public void setStatus(Enum<Status> status) {
+	public ValidationResult setStatus(Enum<Status> status) {
 		this.status = status;
+        return this;
 	}
 
 	public int getStepIndex() {
@@ -61,15 +63,16 @@ public class ValidationResult {
 		this.step = step;
 	}
 
-	public String getMessage() {
-		if (message == null) {
+	public String getInfo() {
+		if (info == null) {
 			return "Validation status: " + getStatus();
 		}
-		return message;
+		return info;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public ValidationResult setInfo(String info) {
+		this.info = info;
+        return this;
 	}
 
 	public Throwable getException() {

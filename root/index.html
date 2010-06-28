@@ -5,7 +5,7 @@
 	<script type="text/javascript" src="res/jquery.Guid.js" ></script>
 	<script type="text/javascript" src="res/jqueryFileTree.js" ></script>
 	<script type="text/javascript" src="res/jquery.ajaxmanager.js" ></script>
-	<script type="text/javascript" src="res/jquery.jquery.tooltip.min.js" ></script>
+	<script type="text/javascript" src="res/jquery.tooltip.min.js" ></script>
 	<script type="text/javascript" src="res/jquery.loadmask.min.js" ></script>
 
     <link href="res/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
@@ -52,8 +52,8 @@
 				success:function(data) {
                     updater_handle.stop();
 				    eval("var result = " + data);
-				    $('#info').html(result.message)
-					$('#full_log').html(result.output || 'No output was captured.');
+				    $('#info').html(result.info)
+					$('#full_log').html(result.fullLog || 'No output was captured.');
 					$('#progress').removeClass().addClass('p_' + result.status);
 					if (result.status == 'red') {
 						var pointer_txt = '\n';
