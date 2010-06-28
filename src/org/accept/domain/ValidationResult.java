@@ -4,25 +4,20 @@ import org.accept.json.JSONObject;
 
 public class ValidationResult {
 
-    public enum Status { red, green, not_run };
-	
+    public enum Status { red, green, not_run }
+
 	private String fullLog;
-	private Enum<Status> status;
-	private int stepIndex;
-	private String step;
-	private String info;
-	private Throwable exception;
+
+    private Enum<Status> status;
+    private int stepIndex;
+    private String step;
+    private String info;
+    private Throwable exception;
+    private String story;
+    private String storyName;
 
 	public ValidationResult() {
 		status = Status.green;
-	}
-
-	public ValidationResult(int stepIndex, String step, String info, Throwable e) {
-		this.stepIndex = stepIndex;
-		this.step = step;
-		this.info = info;
-		this.exception = e;
-		status = Status.red;
 	}
 
 	public String toJSON() {
@@ -51,16 +46,18 @@ public class ValidationResult {
 		return stepIndex;
 	}
 
-	public void setStepIndex(int stepIndex) {
+	public ValidationResult setStepIndex(int stepIndex) {
 		this.stepIndex = stepIndex;
+        return this;
 	}
 
 	public String getStep() {
 		return step;
 	}
 
-	public void setStep(String step) {
+	public ValidationResult setStep(String step) {
 		this.step = step;
+        return this;
 	}
 
 	public String getInfo() {
@@ -79,7 +76,26 @@ public class ValidationResult {
 		return exception;
 	}
 
-	public void setException(Throwable exception) {
+	public ValidationResult setException(Throwable exception) {
 		this.exception = exception;
+        return this;
 	}
+
+    public String getStory() {
+        return story;
+    }
+
+    public ValidationResult setStory(String storyContent) {
+        this.story = storyContent;
+        return this;
+    }
+
+    public String getStoryName() {
+        return storyName;
+    }
+
+    public ValidationResult setStoryName(String storyName) {
+        this.storyName = storyName;
+        return this;
+    }
 }

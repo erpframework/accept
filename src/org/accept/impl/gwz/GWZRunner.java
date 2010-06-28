@@ -24,7 +24,7 @@ public class GWZRunner {
             try {
                 executor.given(step.step);
             } catch (GivWenZenExecutionException e) {
-                Throwable actual = theBottom(e, 2);
+                Throwable actual = extractActualException(e, 2);
                 throw new GWZException(step.lineNo, step.step, actual, contentFile);
             } catch (Exception e) {
                 throw new GWZException(step.lineNo, step.step, e, contentFile);
@@ -33,15 +33,25 @@ public class GWZRunner {
     }
 
 	public ValidationResult run(String content, File contentFile) {
+        String storyName = contentFile.getParentFile().getName() + "/" + contentFile.getName();
         try {
             this.runExplosively(content, contentFile);
         } catch (GWZException e) {
-            return new ValidationResult(e.stepIndex, e.step, e.cause.getMessage(), e.cause);
+            return new ValidationResult()
+                    .setStepIndex(e.stepIndex)
+                    .setStep(e.step)
+                    .setException(e.cause)
+                    .setInfo(e.cause.getMessage())
+                    .setStory(content)
+                    .setStoryName(storyName);
         }
-		return new ValidationResult();
+        return new ValidationResult()
+                .setStory(content)
+                .setStoryName(storyName);
 	}
 
-	private Throwable theBottom(Throwable e, int max) {
+    //TODO: it would be nice if GWZ had simply getActualException() method
+	private Throwable extractActualException(Throwable e, int max) {
 		Throwable cause = e;
 		int i = 0;
 		while (cause.getCause() != null && ++i <= max) {

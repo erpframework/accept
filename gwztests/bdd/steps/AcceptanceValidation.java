@@ -1,10 +1,12 @@
 package bdd.steps;
 
 import org.accept.api.AcceptRunner;
+import org.accept.api.HtmlReportOutputFile;
 import org.accept.api.RootFolder;
 import org.junit.runner.RunWith;
 
 @RunWith(AcceptRunner.class)
 @RootFolder("Accept/root/calculator/Iteration 12")
+@HtmlReportOutputFile("target/foo.html")
 //it is very unfortunate, but this test depends on where you run it (e.g. the work folder)
 public class AcceptanceValidation {}

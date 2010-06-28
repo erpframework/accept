@@ -63,4 +63,17 @@ public class FileIOTest {
         //then
         assertEquals("yo buddy\n", content);
     }
+
+    @Test
+    public void shouldCreateFileInPath() throws Exception {
+        //given
+        File f = new File(io.createTempFile().getParentFile(), "1/2/3/1.txt");
+        f.deleteOnExit();
+
+        //when
+        io.create(f.getPath());
+
+        //then
+        assertTrue(f.exists());
+    }
 }

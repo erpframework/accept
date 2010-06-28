@@ -1,14 +1,14 @@
 package org.accept.impl.gwz;
 
+import org.accept.domain.ValidationResult;
+import org.accept.json.JSONObject;
+import org.accept.util.files.FileIO;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import org.accept.domain.ValidationResult;
-import org.accept.util.files.FileIO;
-import org.accept.json.JSONObject;
 
 public class ProcessRunner {
 

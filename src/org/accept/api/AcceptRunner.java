@@ -1,31 +1,39 @@
 package org.accept.api;
 
+import org.accept.domain.ValidationResult;
 import org.accept.impl.gwz.GWZRunner;
 import org.accept.impl.junit.AcceptFrameworkMethod;
 import org.accept.impl.junit.JUnitSucks;
+import org.accept.impl.reporting.ReportGenerator;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 import java.lang.annotation.Annotation;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Szczepan Faber
- * Date: Jun 24, 2010
- * Time: 10:11:04 PM
- * To change this template use File | Settings | File Templates.
- */
 public class AcceptRunner extends BlockJUnit4ClassRunner {
 
     private String folder;
+    //TODO: synchronize those lists?
+    private List<ValidationResult> passed = new LinkedList<ValidationResult>();
+    private List<ValidationResult> failed = new LinkedList<ValidationResult>();
+    private ReportGenerator generator = new ReportGenerator();
+    private String reportFile = "target/accept.report.html";
 
     public AcceptRunner(Class<?> klass) throws InitializationError {
         super(klass);
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        super.run(notifier);
+        generator.generate(failed, passed, reportFile);
     }
 
     private void initFolder() {
@@ -34,6 +42,8 @@ public class AcceptRunner extends BlockJUnit4ClassRunner {
         for (Annotation ann : anns) {
             if (ann.annotationType() == RootFolder.class) {
                 folder = ((RootFolder) ann).value();
+            } else if (ann.annotationType() == HtmlReportOutputFile.class) {
+                reportFile = ((HtmlReportOutputFile) ann).value();
             }
         }
         if (folder == null) {
@@ -58,7 +68,13 @@ public class AcceptRunner extends BlockJUnit4ClassRunner {
             @Override
             public void evaluate() throws Throwable {
                 AcceptFrameworkMethod m = (AcceptFrameworkMethod) method;
-                new GWZRunner().runExplosively(m.content, m.file);
+                ValidationResult result = new GWZRunner().run(m.content, m.file);
+                if (result.getException() != null) {
+                    failed.add(result);
+                    throw result.getException();
+                } else {
+                    passed.add(result);
+                }
             }
         };
         return s;

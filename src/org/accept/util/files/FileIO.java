@@ -77,4 +77,18 @@ public class FileIO {
 		file.deleteOnExit();
 		return file;
 	}
+
+    public void create(String file) {
+        File f = new File(file);
+        if (f.exists()) {
+            return;
+        }
+
+        f.getParentFile().mkdirs();
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Unfortunately, I was unable to create this file: " + file, e);
+        }
+    }
 }
