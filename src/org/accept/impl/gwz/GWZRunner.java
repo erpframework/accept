@@ -7,6 +7,7 @@ import org.accept.domain.ValidationResult;
 import org.accept.util.classpath.SimpleClasspathExplorer;
 import org.givwenzen.*;
 import org.givwenzen.annotations.MarkedClass;
+import static org.accept.impl.gwz.StepsExtractor.*;
 
 public class GWZRunner {
     private StepsExtractor stepsExtractor = new StepsExtractor();
@@ -14,21 +15,19 @@ public class GWZRunner {
     public void runExplosively(String content, File contentFile) {
         IDomainStepFinder finder = new MyDomainStepFinder();
 
-        List<String> steps = new LinkedList<String>();
+        List<Step> steps = new LinkedList<Step>();
         stepsExtractor.extract(content, steps);
 
         final GivWenZenExecutor executor = new  GivWenZenExecutor(finder, new DomainStepFactory());
 
-        int stepIndex = -1;
-        for (String step : steps) {
-            stepIndex++;
+        for (Step step : steps) {
             try {
-                executor.given(step);
+                executor.given(step.step);
             } catch (GivWenZenExecutionException e) {
                 Throwable actual = theBottom(e, 2);
-                throw new GWZException(stepIndex, step, actual, contentFile);
+                throw new GWZException(step.lineNo, step.step, actual, contentFile);
             } catch (Exception e) {
-                throw new GWZException(stepIndex, step, e, contentFile);
+                throw new GWZException(step.lineNo, step.step, e, contentFile);
             }
         }
     }

@@ -57,7 +57,7 @@
 					$('#progress'+idx).removeClass().addClass('p_' + result.status);
 					if (result.status == 'red') {
 						var pointer_txt = '\n';
-						for (var i = 0 ; i < result.stepIndex ; i++) {
+						for (var i = 0 ; i < result.stepIndex-1 ; i++) {
 							pointer_txt += '\n';
 						}	
 						pointer_txt += '>>>';				

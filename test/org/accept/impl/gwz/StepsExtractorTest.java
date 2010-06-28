@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.accept.impl.gwz.StepsExtractor.*;
 
 public class StepsExtractorTest {
 
@@ -25,7 +26,7 @@ public class StepsExtractorTest {
 
         //then
         assertThat(steps)
-            .containsExactly("I enter 7", "I enter 10", "I add the numbers", "The calculator shows 17");
+            .containsExactly(new Step("I enter 7", 2), new Step("I enter 10", 3), new Step("I add the numbers", 5), new Step("The calculator shows 17", 7));
     }
 
     @Test
@@ -34,17 +35,17 @@ public class StepsExtractorTest {
         e.extract("   trim me   ", steps);
 
         //then
-        assertThat(steps).containsExactly("trim me");
+        assertThat(steps).containsExactly(new Step("trim me", 1));
     }
 
     @Test
     public void shouldIgnoreEmptyLines() throws Exception {
         //when
-        e.extract("   \n" +
+        e.extract("   \n\n" +
                 "  life is good!\n", steps);
 
         //then
-        assertThat(steps).containsExactly("life is good!");
+        assertThat(steps).containsExactly(new Step("life is good!", 3));
     }
 
     @Test
@@ -54,6 +55,6 @@ public class StepsExtractorTest {
                 "  Peace.\n", steps);
 
         //then
-        assertThat(steps).containsExactly("Peace.");
+        assertThat(steps).containsExactly(new Step("Peace.", 2));
     }
 }
