@@ -6,22 +6,27 @@ public class FileIO {
     public final String TEMP_FILE_SUFFIX = "accept-tool";
 
     public String read(File file) {
-		StringBuilder out = new StringBuilder();
-        BufferedReader r = null;
-		try {
-			r = new BufferedReader(new FileReader(file));
-			String line = r.readLine();
-			while (line != null) {
-				out.append(line).append("\n");
-				line = r.readLine();
-			}
+        FileReader in = null;
+        try {
+            in = new FileReader(file);
+            return readNoClosing(in);
 		} catch (Exception e) {
 			throw new RuntimeException("Problems reading contents from file: " + file.getName(), e);
  		} finally {
-            close(r);
+            close(in);
         }
-		return out.toString();
 	}
+
+    private String readNoClosing(Reader in) throws IOException {
+        StringBuilder out = new StringBuilder();
+        BufferedReader r = new BufferedReader(in);
+        String line = r.readLine();
+        while (line != null) {
+            out.append(line).append("\n");
+            line = r.readLine();
+        }
+        return out.toString();
+    }
 
     public void write(File file, String content) {
 		PrintWriter p = null;
@@ -89,6 +94,18 @@ public class FileIO {
             f.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Unfortunately, I was unable to create this file: " + file, e);
+        }
+    }
+
+    public String read(InputStream is) {
+        InputStreamReader isr = null;
+        try {
+            isr = new InputStreamReader(is);
+            return readNoClosing(isr);
+		} catch (Exception e) {
+			throw new RuntimeException("Problems reading stream. ", e);
+ 		} finally {
+            close(isr);
         }
     }
 }

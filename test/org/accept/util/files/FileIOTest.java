@@ -2,6 +2,7 @@ package org.accept.util.files;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import static junit.framework.Assert.assertEquals;
@@ -75,5 +76,15 @@ public class FileIOTest {
 
         //then
         assertTrue(f.exists());
+    }
+
+    @Test
+    public void shouldReadFromStream() throws Exception {
+        //given
+        ByteArrayInputStream bis = new ByteArrayInputStream("foo".getBytes());
+        //when
+        String out = io.read(bis);
+        //then
+        assertEquals(out, "foo\n");
     }
 }

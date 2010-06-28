@@ -61,7 +61,7 @@ public class ReportGeneratorTest {
                 .contains("Sure, mate!");
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void xmain(String[] args) throws Exception {
         ReportGenerator g = new ReportGenerator();
         List<ValidationResult> incomplete = asList(
                 new ValidationResult().setStoryName("Iteration 2/Addition.story").setStory("Given\n" +

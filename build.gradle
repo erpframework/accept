@@ -9,6 +9,9 @@ sourceSets {
             srcDir 'gwztests'
             srcDir 'html'
         }
+        resources {
+            srcDir 'src'
+        }
     }
 	test {
 		java {

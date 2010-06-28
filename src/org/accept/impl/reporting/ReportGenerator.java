@@ -4,7 +4,8 @@ import biz.source_code.miniTemplator.MiniTemplator;
 import org.accept.domain.ValidationResult;
 import org.accept.util.files.FileIO;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -19,10 +20,12 @@ public class ReportGenerator {
 
     public String generate(List<ValidationResult> incomplete, List<ValidationResult> complete, String outputReportFile) {
         new FileIO().create(outputReportFile);
-        URL resource = getClass().getClassLoader().getResource("report.template.html");
+        InputStream resource = getClass().getClassLoader().getResourceAsStream("report.template.html");
         MiniTemplator t;
         try {
-            t = new MiniTemplator(resource.getFile());
+            MiniTemplator.TemplateSpecification spec = new MiniTemplator.TemplateSpecification();
+            spec.templateText = new FileIO().read(resource);
+            t = new MiniTemplator(spec);
             int idx = -1;
             t.setVariable("incompleteCount", incomplete.size() + "");
             for (ValidationResult result : incomplete) {
