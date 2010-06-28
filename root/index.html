@@ -17,7 +17,7 @@
         //TODO: very lame
         var validationStarted = false;
 
-		function validate(file_name) {
+		function validate(file_name) {                                  
             if (validationStarted) {
                 return;
             }
@@ -25,7 +25,7 @@
 
             validation_started();
             $('#full_log').html('Started.')
-            $('#message').html('Started. See the full log for real-time output.')
+            $('#info').html('Started. See the full log for real-time output.')
 
             if (!file_name) { file_name = '' }
 
@@ -52,7 +52,7 @@
 				success:function(data) {
                     updater_handle.stop();
 				    eval("var result = " + data);
-				    $('#message').html(result.message)
+				    $('#info').html(result.message)
 					$('#full_log').html(result.output || 'No output was captured.');
 					$('#progress').removeClass().addClass('p_' + result.status);
 					if (result.status == 'red') {
@@ -131,7 +131,7 @@
             }, function(file) {
                 $.ajax( { url: file, success:function(data) {
                         $('#full_log').html('Full log: not validated yet.')
-                        $('#message').html('Info: not validated yet.')
+                        $('#info').html('Info: not validated yet.')
                         $('#content').attr('value', data);
                         validation_started();
                     }
@@ -206,7 +206,7 @@ You can also type here the acceptance criteria by hand. This allows you *learn* 
             </h3>
         </div>
         <div id="info_tab" >
-            <pre id="message" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
+            <pre id="info" cols="80" rows="10" readonly="true">Info: not validated yet</pre>
         </div>
         <div id="full_log_tab" style="display:none;" >
             <pre id="full_log" cols="80" rows="10" readonly="true">Full log: not validated yet</pre>
