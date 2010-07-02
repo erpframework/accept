@@ -1,9 +1,9 @@
-import org.accept.api.AcceptRunner;
+import org.accept.api.AcceptFolderRunner;
 import org.accept.api.HtmlReportOutputFile;
 import org.accept.api.RootFolder;
 import org.junit.runner.RunWith;
 
-@RunWith(AcceptRunner.class)
+@RunWith(AcceptFolderRunner.class)
 //this test depends on where you run it (e.g. the working dir)
 //unless obviously you specify the absolute path but for heavens sake don't do it.
 @RootFolder("acceptance")

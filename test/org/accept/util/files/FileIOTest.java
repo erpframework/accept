@@ -87,4 +87,10 @@ public class FileIOTest {
         //then
         assertEquals(out, "foo\n");
     }
+
+    @Test
+    public void shouldCreateFileInCurrentFolder() throws Exception {
+        File f = new FileIO().create("foo.txt");
+        f.deleteOnExit();
+    }
 }

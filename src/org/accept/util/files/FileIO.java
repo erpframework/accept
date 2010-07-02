@@ -29,6 +29,7 @@ public class FileIO {
     }
 
     public void write(File file, String content) {
+        create(file.getPath());
 		PrintWriter p = null;
 		try {
 			p = new PrintWriter(new FileWriter(file));
@@ -83,18 +84,21 @@ public class FileIO {
 		return file;
 	}
 
-    public void create(String file) {
+    public File create(String file) {
         File f = new File(file);
         if (f.exists()) {
-            return;
+            return f;
         }
 
-        f.getParentFile().mkdirs();
+        if (f.getParentFile() != null) {
+            f.getParentFile().mkdirs();
+        }
         try {
             f.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Unfortunately, I was unable to create this file: " + file, e);
         }
+        return f;
     }
 
     public String read(InputStream is) {

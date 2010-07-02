@@ -36,7 +36,7 @@ public class AcceptRunner extends BlockJUnit4ClassRunner {
         generator.generate(failed, passed, reportFile);
     }
 
-    private void initFolder() {
+    private void validateRootFolder() {
         List<Annotation> anns = asList(this.getTestClass().getAnnotations());
         folder = null;
         for (Annotation ann : anns) {
@@ -56,8 +56,8 @@ public class AcceptRunner extends BlockJUnit4ClassRunner {
     }
 
     @Override
-	protected java.util.List<FrameworkMethod> computeTestMethods() {
-        initFolder();
+	protected List<FrameworkMethod> computeTestMethods() {
+        validateRootFolder();
         JUnitSucks sucker = new JUnitSucks();
         return sucker.createMethods(folder);
 	}

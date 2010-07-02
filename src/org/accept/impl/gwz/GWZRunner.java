@@ -11,28 +11,29 @@ import static org.accept.impl.gwz.StepsExtractor.*;
 
 public class GWZRunner {
     private StepsExtractor stepsExtractor = new StepsExtractor();
+    final GivWenZenExecutor executor = new  GivWenZenExecutor(new MyDomainStepFinder(), new DomainStepFactory());
 
     public void runExplosively(String content, File contentFile) {
-        IDomainStepFinder finder = new MyDomainStepFinder();
-
         List<Step> steps = new LinkedList<Step>();
         stepsExtractor.extract(content, steps);
 
-        final GivWenZenExecutor executor = new  GivWenZenExecutor(finder, new DomainStepFactory());
-
         for (Step step : steps) {
-            try {
-                executor.given(step.step);
-            } catch (GivWenZenExecutionException e) {
-                Throwable actual = extractActualException(e, 2);
-                throw new GWZException(step.lineNo, step.step, actual, contentFile);
-            } catch (Exception e) {
-                throw new GWZException(step.lineNo, step.step, e, contentFile);
-            }
+            runStep(contentFile, step);
         }
     }
 
-	public ValidationResult run(String content, File contentFile) {
+    public void runStep(File contentFile, Step step) {
+        try {
+            executor.given(step.step);
+        } catch (GivWenZenExecutionException e) {
+            Throwable actual = extractActualException(e, 2);
+            throw new GWZException(step.lineNo, step.step, actual, contentFile);
+        } catch (Exception e) {
+            throw new GWZException(step.lineNo, step.step, e, contentFile);
+        }
+    }
+
+    public ValidationResult run(String content, File contentFile) {
         String storyName = contentFile.getParentFile().getName() + "/" + contentFile.getName();
         try {
             this.runExplosively(content, contentFile);
@@ -85,7 +86,7 @@ public class GWZRunner {
         }
     }
 
-    public class MyDomainStepFinder implements IDomainStepFinder {
+    public static class MyDomainStepFinder implements IDomainStepFinder {
         public Set<MarkedClass> findStepDefinitions() {
             final HashSet<MarkedClass> s = new HashSet<MarkedClass>();
             try {

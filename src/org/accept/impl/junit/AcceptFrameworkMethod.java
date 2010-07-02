@@ -1,5 +1,6 @@
 package org.accept.impl.junit;
 
+import org.accept.impl.gwz.StepsExtractor;
 import org.junit.runners.model.FrameworkMethod;
 
 import java.io.File;
@@ -15,11 +16,17 @@ import java.lang.reflect.Method;
 public class AcceptFrameworkMethod extends FrameworkMethod {
     public File file;
     public String content;
+    public StepsExtractor.Step step;
 
     public AcceptFrameworkMethod(File file, String content) {
         super(getMethodNow());
         this.file = file;
         this.content = content;
+    }
+
+    public AcceptFrameworkMethod(StepsExtractor.Step step) {
+        super(getMethodNow());
+        this.step = step;
     }
 
     public void method() {}
