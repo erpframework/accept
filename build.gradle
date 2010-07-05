@@ -43,4 +43,13 @@ manifest.mainAttributes(
   'Implementation-Vendor': 'Szczepan Faber'
 )
 
-defaultTasks "clean", "build", "test", "jar"
+task 'update-sample-project' (type: Copy) {
+    from jar.archivePath
+    into 'accept-sample-project/acceptance'
+    rename { String fileName ->
+        fileName.replace('-SNAPSHOT', '')
+    }
+}  
+
+
+defaultTasks "clean", "build", "test", "jar", "update-sample-project"
