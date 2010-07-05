@@ -1,9 +1,6 @@
 package bdd.steps;
 
-import org.accept.api.AcceptRunner;
 import org.accept.api.AcceptStoryRunner;
-import org.accept.api.HtmlReportOutputFile;
-import org.accept.api.RootFolder;
 import org.junit.runner.RunWith;
 
 @RunWith(AcceptStoryRunner.class)
