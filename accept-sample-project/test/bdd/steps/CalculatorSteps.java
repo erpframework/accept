@@ -32,9 +32,4 @@ public class CalculatorSteps {
 	public void subtract() {
 		calculator.subtract();
 	}
-	
-	@DomainStep("calculator is turned on")
-	public void reset() {
-		calculator = new Calculator();
-	}
 }

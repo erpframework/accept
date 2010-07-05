@@ -1,5 +1,4 @@
 Given
-  calculator is turned on
   I enter 15
   I enter 10
 When
