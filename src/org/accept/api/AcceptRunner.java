@@ -47,7 +47,7 @@ public class AcceptRunner extends Suite {
                     String folderRemoved = file.getPath().replace(new File(folder).getPath(), "");
                     String storyRemoved = folderRemoved.replaceFirst("\\.story$", "");
 
-                    AcceptStoryRunner r = new AcceptStoryRunner(klass, storyRemoved, story);
+                    InternalAcceptStoryRunner r = new InternalAcceptStoryRunner(klass, storyRemoved, story);
                     runners.add(r);
                 } catch (InitializationError initializationError) {
                     throw new RuntimeException("Unable to instantianate runner", initializationError);

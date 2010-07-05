@@ -3,7 +3,6 @@ package bdd.steps;
 import org.accept.api.*;
 import org.junit.runner.RunWith;
 
-@RunWith(AcceptFolderRunner.class)
-@RootFolder("Accept/root/calculator")
-@HtmlReportOutputFile("target/foo.html")
+@RunWith(AcceptRunner.class)
+@RootFolder("Accept/root/calculator/Iteration 12")
 public class AcceptanceValidationAllStories {}
