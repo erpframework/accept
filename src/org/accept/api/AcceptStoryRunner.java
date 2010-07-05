@@ -60,7 +60,7 @@ class AcceptStoryRunner extends BlockJUnit4ClassRunner {
             @Override
             public void evaluate() throws Throwable {
                 AcceptFrameworkMethod m = (AcceptFrameworkMethod) method;
-                gwzRunner.runStep(new File("foo"), m.step);
+                gwzRunner.runStep(new File(storyFile), m.step);
             }
         };
         return s;
