@@ -44,6 +44,7 @@ public class GWZRunner {
                     .setException(e.cause)
                     .setInfo(e.cause.getMessage())
                     .setStory(content)
+                    .setStatus(ValidationResult.Status.red)
                     .setStoryName(storyName);
         }
         return new ValidationResult()
