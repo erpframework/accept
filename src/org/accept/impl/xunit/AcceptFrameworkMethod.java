@@ -1,4 +1,4 @@
-package org.accept.impl.junit;
+package org.accept.impl.xunit;
 
 import org.accept.impl.gwz.StepsExtractor;
 import org.junit.runners.model.FrameworkMethod;

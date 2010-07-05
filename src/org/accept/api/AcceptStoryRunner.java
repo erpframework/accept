@@ -3,8 +3,9 @@ package org.accept.api;
 import bdd.steps.CalculatorSteps;
 import org.accept.impl.gwz.GWZRunner;
 import org.accept.impl.gwz.StepsExtractor;
-import org.accept.impl.junit.AcceptFrameworkMethod;
-import org.accept.impl.junit.JUnitSucks;
+import org.accept.impl.xunit.AcceptFrameworkMethod;
+import org.accept.impl.xunit.JUnitSucks;
+import org.accept.impl.xunit.RunnableStory;
 import org.accept.util.reflect.Whitebox;
 import org.junit.runner.Description;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -13,28 +14,14 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AcceptStoryRunner extends BlockJUnit4ClassRunner {
+class AcceptStoryRunner extends BlockJUnit4ClassRunner {
 
     private String storyFile;
     private RunnableStory story;
     private GWZRunner gwzRunner = new GWZRunner();
-
-    public static class RunnableStory {
-        private List<StepsExtractor.Step> steps = new LinkedList<StepsExtractor.Step>();
-
-        public List<StepsExtractor.Step> getSteps() {
-            return steps;
-        }
-
-        public RunnableStory steps(String stepsAsString) {
-            new StepsExtractor().extract(stepsAsString, steps);
-            return this;
-        }
-    };
 
     //TEST ONLY :)
     public AcceptStoryRunner(Class<?> klass) throws InitializationError {
@@ -94,7 +81,7 @@ public class AcceptStoryRunner extends BlockJUnit4ClassRunner {
     protected Description describeChild(FrameworkMethod method) {
         Description d = super.describeChild(method);
         AcceptFrameworkMethod m = (AcceptFrameworkMethod) method;
-        Whitebox.setInternalState(d, "fDisplayName", m.step.step + " [checkResult](bdd.steps.CalculatorSteps)");
+        Whitebox.setInternalState(d, "fDisplayName", m.step.step + " (" + storyFile + ".story:" + m.step.lineNo + ")");
         return d;
     }
 }
