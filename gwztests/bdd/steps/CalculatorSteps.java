@@ -30,11 +30,6 @@ public class CalculatorSteps {
 		calculator.subtract();
 	}
 	
-	@DomainStep("calculator is turned on")
-	public void reset() {
-		calculator = new Calculator();
-	}
-
     @DomainStep("I mangle with the numbers randomly for (.*) seconds")
     public void playWithNumbers(int times) throws Exception {
         System.out.println("Started big calculation");
