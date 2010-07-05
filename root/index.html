@@ -121,7 +121,7 @@
 
             $('#wait').ajaxStart(function() { $('#wait').fadeIn() } );
             $('#wait').ajaxComplete(function(e, x, opts) {
-                if (opts.url.substr(0, 11) != 'getProgress') $('#wait').fadeOut()
+                if (opts.url.substr(0, 11) != 'getProgress' && !validationStarted) $('#wait').fadeOut()
             } );
 
             $('#files_div').fileTree({                
@@ -138,7 +138,7 @@
                 });
             });
 
-            $('.help').tooltip( { delay:0 } );
+            $('.help').tooltip( { showURL: false  } );
 		}
 	</script>  
 	
